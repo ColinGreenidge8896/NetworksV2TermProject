@@ -29,13 +29,13 @@ struct Header
 
 	unsigned int padding : 4; //padding because of space required
 
-	unsigned short int length;
+	unsigned short int length; //length of the body of the packet
 }Head;
 
 struct DriveBody {
-	char direction : 1;
-	char duration : 1;
-	char speed : 1;
+	char direction;
+	char duration;
+	char speed;
 };
 
 
@@ -70,7 +70,7 @@ public:
 		RawBuffer = nullptr;
 
 		// Deserialize the Header (Copy PktCount, commands, (padding) and length)
-		memcpy(&Head, data, sizeof(Header));
+		memcpy(&CmdPack.header, data, sizeof(Header));
 
 		//shift pointer past header now that it is set
 		data += sizeof(Header);
@@ -80,8 +80,10 @@ public:
 			std::memcpy(CmdPack.data, data, CmdPack.header.length);
 		}
 		else {
-			CmdPack.data = nullptr;
-			//should this be nullptr or just null terminated string?
+			if (CmdPack.data) {
+				delete[] CmdPack.data;
+				CmdPack.data = nullptr;
+			}
 		}
 
 		//copy crc
@@ -111,6 +113,8 @@ public:
 		if (CmdPack.data) {
 			delete[] CmdPack.data;
 			CmdPack.data = nullptr;
+			//set length back to 0 whenever data is wiped
+			CmdPack.header.length = 0;
 		}
 		CmdPack.data = new char[size];
 		std::memcpy(CmdPack.data, srcData, size);
@@ -141,7 +145,10 @@ public:
 	}
 	// Returns a pointer to the body data of the packet
 	char* GetBodyData() {
-		return CmdPack.data;
+		if (CmdPack.data != nullptr) {
+			return CmdPack.data;
+		}
+		return nullptr;
 	}
 	// Returns the current packet count value stored in the header
 	int GetPktCount() {
@@ -152,6 +159,12 @@ public:
 	//Validates the CRC of a received packet
 	//Counts all bits set to 1 in the buffer and compares the count with CRC value 
 	bool CheckCRC(char* buffer, int size) {
+		//check for bad input before calculating
+		if (size <= 0) {
+			printf("CheckCRC was given size of 0 or less/n");
+			return false;
+		}
+
 		unsigned char calculated = 0;
 		// Loop through all bytes in buffer exculding the last byte 
 		for (int i = 0; i < size - 1; i++) {
@@ -188,42 +201,39 @@ public:
 	}
 
 	char* GenPacket() {
-		if (RawBuffer) delete[] RawBuffer;
-		int totalSize = sizeof(CmdPack.header) + CmdPack.header.length + sizeof(CmdPack.CRC);
-		RawBuffer = new char[totalSize];
-		std::memcpy(RawBuffer, &CmdPack.header, sizeof(CmdPack.header));
-		if (CmdPack.header.length > 0 && CmdPack.data) {
-			std::memcpy(RawBuffer + sizeof(CmdPack.header), CmdPack.data, CmdPack.header.length);
+		// Calculate the total packet size
+		int packetSize = sizeof(Header) + CmdPack.header.length + sizeof(unsigned char); // CRC
+
+		// Free previous allocation if any
+		if (RawBuffer) {
+			delete[] RawBuffer;
 		}
-		RawBuffer[totalSize - 1] = CmdPack.CRC;
+
+		// Allocate new RawBuffer
+		RawBuffer = new char[packetSize];
+		if (!RawBuffer) {
+			printf("RawBuffer allocation failed/n");
+			return nullptr;
+		}
+
+		// Pointer to track copy position
+		char* ptr = RawBuffer;
+
+		// Copy Header
+		memcpy(ptr, &CmdPack.header, sizeof(Header));
+		ptr += sizeof(Header);
+
+		// Copy Data (if present)
+		if (CmdPack.header.length > 0 && CmdPack.data) {
+			memcpy(ptr, CmdPack.data, CmdPack.header.length);
+			ptr += CmdPack.header.length;
+		}
+
+		// Copy CRC
+		memcpy(ptr, &CmdPack.CRC, sizeof(unsigned char));
+
+		// Return the allocated RawBuffer
 		return RawBuffer;
 	}
 
 };
-
-// AI generated... 
-
-// char* GenPacket() {
-//     // Clear existing RawBuffer if it exists
-//     if (RawBuffer) {
-//         delete[] RawBuffer;
-//         RawBuffer = nullptr;
-//     }
-
-//     // Total packet size: header + body + CRC
-//     int totalSize = headersize + CmdPack.header.length + sizeof(CmdPack.CRC);
-//     RawBuffer = new char[totalSize];
-
-//     // Copy the header
-//     std::memcpy(RawBuffer, &CmdPack.header, headersize);
-
-//     // Copy the body (if any)
-//     if (CmdPack.header.length > 0 && CmdPack.data) {
-//         std::memcpy(RawBuffer + headersize, CmdPack.data, CmdPack.header.length);
-//     }
-
-//     // Append CRC at the end
-//     RawBuffer[totalSize - 1] = CmdPack.CRC;
-
-//     return RawBuffer;
-// }
