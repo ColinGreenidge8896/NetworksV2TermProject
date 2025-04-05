@@ -36,6 +36,17 @@ struct Header
 }Head;
 //#pragma pack(pop)
 
+struct TelemetryBody {
+    unsigned short LastPktCounter;
+    unsigned short CurrentGrade;
+    unsigned short HitCount;
+    unsigned char  LastCmd;
+    unsigned char  LastCmdValue;
+    unsigned char  LastCmdSpeed;
+}Telemetry;
+
+
+
 struct DriveBody {
 	char direction;
 	char duration;
@@ -235,6 +246,14 @@ public:
 
 		// Return the allocated RawBuffer
 		return RawBuffer;
+	}
+	
+	TelemetryBody GetTelemetry() {
+		TelemetryBody t{};
+		if (CmdPack.header.length == sizeof(TelemetryBody)) {
+			std::memcpy(&t, CmdPack.data, sizeof(TelemetryBody));
+		}
+		return t;
 	}
 
 };
