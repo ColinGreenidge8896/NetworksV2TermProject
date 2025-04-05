@@ -131,49 +131,62 @@ public:
 		return ACK;
 
 	}
+	// Returns true if the Ack flag is set in the header
 	bool GetAck() {
 		return CmdPack.header.ack;
 	}
-
+	// Returns the length of the packet's body
 	int GetLength() {
 		return CmdPack.header.length;
 	}
-
+	// Returns a pointer to the body data of the packet
 	char* GetBodyData() {
 		return CmdPack.data;
 	}
+	// Returns the current packet count value stored in the header
 	int GetPktCount() {
 		return CmdPack.header.PktCount;
 	}
 
-	//needs comments
+	
+	//Validates the CRC of a received packet
+	//Counts all bits set to 1 in the buffer and compares the count with CRC value 
 	bool CheckCRC(char* buffer, int size) {
 		unsigned char calculated = 0;
+		// Loop through all bytes in buffer exculding the last byte 
 		for (int i = 0; i < size - 1; i++) {
+			//Counts how many bits are set to 1 in each byte 
 			unsigned char byte = buffer[i];
 			for (int b = 0; b < 8; b++) {
 				if (byte & (1 << b)) calculated++;
 			}
 		}
+		//Compare the calculted CRC with the actual CRC value 
 		return calculated == static_cast<unsigned char>(buffer[size - 1]);
 	}
 
-	//needs comments
+	//Calculates the CRC for the packet 
+	//Counts all the bits set to 1 in the header and body
 	void CalcCRC() {
 		CmdPack.CRC = 0;
+		//Loop through each byte of the header 
 		for (int i = 0; i < sizeof(CmdPack.header); i++) {
 			unsigned char byte = ((char*)&CmdPack.header)[i];
+			//Count the number of bits in the byte 
 			for (int b = 0; b < 8; b++) {
 				if (byte & (1 << b)) CmdPack.CRC++;
 			}
 		}
+		//Loop through each byte of the body (data)
 		for (int i = 0; i < CmdPack.header.length; i++) {
 			unsigned char byte = CmdPack.data[i];
+			//Count the number of bits in the byte 
 			for (int b = 0; b < 8; b++) {
 				if (byte & (1 << b)) CmdPack.CRC++;
 			}
 		}
 	}
+
 	char* GenPacket() {
 		if (RawBuffer) delete[] RawBuffer;
 		int totalSize = sizeof(CmdPack.header) + CmdPack.header.length + sizeof(CmdPack.CRC);
@@ -187,3 +200,30 @@ public:
 	}
 
 };
+
+// AI generated... 
+
+// char* GenPacket() {
+//     // Clear existing RawBuffer if it exists
+//     if (RawBuffer) {
+//         delete[] RawBuffer;
+//         RawBuffer = nullptr;
+//     }
+
+//     // Total packet size: header + body + CRC
+//     int totalSize = headersize + CmdPack.header.length + sizeof(CmdPack.CRC);
+//     RawBuffer = new char[totalSize];
+
+//     // Copy the header
+//     std::memcpy(RawBuffer, &CmdPack.header, headersize);
+
+//     // Copy the body (if any)
+//     if (CmdPack.header.length > 0 && CmdPack.data) {
+//         std::memcpy(RawBuffer + headersize, CmdPack.data, CmdPack.header.length);
+//     }
+
+//     // Append CRC at the end
+//     RawBuffer[totalSize - 1] = CmdPack.CRC;
+
+//     return RawBuffer;
+// }
