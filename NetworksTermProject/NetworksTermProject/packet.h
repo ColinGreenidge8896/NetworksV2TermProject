@@ -30,7 +30,7 @@ struct Header
 	unsigned int padding : 4; //padding because of space required
 
 	unsigned short int length;
-};
+}Head;
 
 struct DriveBody {
 	char direction : 1;
@@ -39,79 +39,151 @@ struct DriveBody {
 };
 
 
+//change sizeof(Header) to headersize? 
+
 
 class PktDef
 {
+private:
 	struct CmdPacket {
-		Header head;
-		char* Data;
+		Header header;
+		char* data;
 		unsigned char CRC; //Cyclic Redundancy Check
-	};
+	}CmdPack;
 
 	char* RawBuffer; //stores all data to send to robot
 
 public:
 
-	PktDef():
+	//Default safe state - all header = 0, data pointer set null, crc = 0
+	PktDef() {
+		memset(&CmdPack.header, 0, sizeof(Header));
+		CmdPack.data = nullptr;
+		CmdPack.CRC = 0;
 
-	//this is example from A1 - not perfect
-	//Packet() : Data(nullptr), TxBuffer(nullptr) { memset(&Head, 0, sizeof(Head));  Head.Source = 2; };		//Default Constructor - Safe State
-	//void SetLineNumber(int value) { Head.LineNumber = value; };		//Sets the line number within the object
-	//void Display(std::ostream& os)
-	//{
-	//	os << std::dec;
-	//	os << "Source:  " << (int)Head.Source << std::endl;
-	//	os << "LineNum: " << (int)Head.LineNumber << std::endl;
-	//	os << "Length:  " << (int)Head.Length << std::endl;
-	//	os << "Msg:     " << Data << std::endl;
-	//	os << "CRC:     " << std::hex << (unsigned int)CRC << std::endl;
-	//
-	//	}
-	//Packet(char* src)
-	//{
-	//	Head.Source = src[0] & 0x0F; //bitwise AND 00001111 to get first 4 bits of the byte
-	//	Head.LineNumber = (src[0] >> 4) & 0x0F; //bitshift to get 4 bits right, bitwise AND 11110000
-	//	Head.Length = src[1]; //size of data
+		//not explicity stated in reqs, but should be done
+		RawBuffer = nullptr;
+	}
 
-	//	Data = new char[Head.Length + 1]; //make room for null terminator
-	//	memcpy(Data, src + 2, Head.Length);//head is 2 bytes, start data after
-	//	Data[Head.Length] = '\0';
+	//Populates the Header, Body, and CRC contents of the PktDef object
+	PktDef(char* data) {
+		RawBuffer = nullptr;
 
-	//	CRC = CalculateCRC();
-	//}
+		// Deserialize the Header (Copy PktCount, commands, (padding) and length)
+		memcpy(&Head, data, sizeof(Header));
 
-	//void SetData(char* srcData, int Size)//memcpy in order
-	//{
-	//	Head.Length = Size; //update header to data size
-	//	//any other header info? source?
+		//shift pointer past header now that it is set
+		data += sizeof(Header);
 
-	//	if (Data) delete[] Data; //destination
+		if (CmdPack.header.length > 0) {
+			CmdPack.data = new char[CmdPack.header.length];
+			std::memcpy(CmdPack.data, data, CmdPack.header.length);
+		}
+		else {
+			CmdPack.data = nullptr;
+			//should this be nullptr or just null terminated string?
+		}
 
-	//	Data = new char[Size + 1];
-	//	memcpy(Data, srcData, Size); //dest, src, size
-	//	Data[Size] = '\0';//null terminate
+		//copy crc
+		data += CmdPack.header.length;
+		std::memcpy(&CmdPack.CRC, data, sizeof(CmdPack.CRC));
+		RawBuffer = nullptr;
+	}
 
-	//};
+	void SetCmd(CmdType cmd) {
+		//do we need to handle creating ack?
+		if (cmd == ACK) {
+			//CmdPack.header.ack = 1;
+			//print out "cmd is ack"?
+		}
+		else {
+			CmdPack.header.drive = CmdPack.header.status = CmdPack.header.sleep = 0;
+			switch (cmd) {
+			case DRIVE: CmdPack.header.drive = 1; break;
+			case SLEEP: CmdPack.header.sleep = 1; break;
+			case STATUS: CmdPack.header.status = 1; break;
+			}
+		}
+	}
 
-	//char* SerializeData(int& TotalSize) //allocate space in txBuffer, calculate CRC, memcpy into buffer in order
-	//{
-	//	TotalSize = sizeof(Head) + Head.Length + sizeof(CRC);
+	//set new body data 
+	void SetBodyData(char* srcData, int size) {
+		if (CmdPack.data) {
+			delete[] CmdPack.data;
+			CmdPack.data = nullptr;
+		}
+		CmdPack.data = new char[size];
+		std::memcpy(CmdPack.data, srcData, size);
+		CmdPack.header.length = size;
+	}
 
-	//	if (TxBuffer) delete[] TxBuffer;
-	//	TxBuffer = new char[TotalSize];
+	//sets the objects PktCount header variable
+	void SetPktCount(int count) {
+		CmdPack.header.PktCount = count;
+	}
 
-	//	CRC = CalculateCRC();
+	CmdType GetCmd() {
+		if (CmdPack.header.drive) return DRIVE;
+		if (CmdPack.header.sleep) return SLEEP;
+		if (CmdPack.header.status) return STATUS;
 
-	//	//memcpy in order (dest, src, size) (dont worry about dynamic allocated, this is to fix that)
-	//	memcpy(TxBuffer, &Head, sizeof(Head)); //buffer overrun? how to fix?
-	//	memcpy(TxBuffer + sizeof(Head), Data, Head.Length);
-	//	memcpy(TxBuffer + sizeof(Head) + Head.Length, &CRC, sizeof(CRC));
+		//return ack otherwise? 
+		return ACK;
 
-	//	return TxBuffer;
-	//};
+	}
+	bool GetAck() {
+		return CmdPack.header.ack;
+	}
 
-	//unsigned int CalculateCRC()
-	//{
-	//	return 0xFF00FF00;
-	//}
+	int GetLength() {
+		return CmdPack.header.length;
+	}
+
+	char* GetBodyData() {
+		return CmdPack.data;
+	}
+	int GetPktCount() {
+		return CmdPack.header.PktCount;
+	}
+
+	//needs comments
+	bool CheckCRC(char* buffer, int size) {
+		unsigned char calculated = 0;
+		for (int i = 0; i < size - 1; i++) {
+			unsigned char byte = buffer[i];
+			for (int b = 0; b < 8; b++) {
+				if (byte & (1 << b)) calculated++;
+			}
+		}
+		return calculated == static_cast<unsigned char>(buffer[size - 1]);
+	}
+
+	//needs comments
+	void CalcCRC() {
+		CmdPack.CRC = 0;
+		for (int i = 0; i < sizeof(CmdPack.header); i++) {
+			unsigned char byte = ((char*)&CmdPack.header)[i];
+			for (int b = 0; b < 8; b++) {
+				if (byte & (1 << b)) CmdPack.CRC++;
+			}
+		}
+		for (int i = 0; i < CmdPack.header.length; i++) {
+			unsigned char byte = CmdPack.data[i];
+			for (int b = 0; b < 8; b++) {
+				if (byte & (1 << b)) CmdPack.CRC++;
+			}
+		}
+	}
+	char* GenPacket() {
+		if (RawBuffer) delete[] RawBuffer;
+		int totalSize = sizeof(CmdPack.header) + CmdPack.header.length + sizeof(CmdPack.CRC);
+		RawBuffer = new char[totalSize];
+		std::memcpy(RawBuffer, &CmdPack.header, sizeof(CmdPack.header));
+		if (CmdPack.header.length > 0 && CmdPack.data) {
+			std::memcpy(RawBuffer + sizeof(CmdPack.header), CmdPack.data, CmdPack.header.length);
+		}
+		RawBuffer[totalSize - 1] = CmdPack.CRC;
+		return RawBuffer;
+	}
+
 };
