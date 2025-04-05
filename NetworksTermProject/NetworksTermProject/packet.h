@@ -77,6 +77,7 @@ public:
 
 		if (CmdPack.header.length > 0) {
 			CmdPack.data = new char[CmdPack.header.length];
+			//copy body data from packet into object
 			std::memcpy(CmdPack.data, data, CmdPack.header.length);
 		}
 		else {
