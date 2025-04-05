@@ -21,21 +21,22 @@ enum CmdType {
 struct Header
 {
 	unsigned short int PktCount; //2 bytes
-	char drive : 1; //1 bit each
-	char status : 1;
-	char sleep : 1;
-	char ack : 1;
+
+	unsigned char drive : 1; //1 bit each
+	unsigned char status : 1;
+	unsigned char sleep : 1;
+	unsigned char ack : 1;
+
 	unsigned int padding : 4; //padding because of space required
-	unsigned int length : 2;
 
-
-} Head;
+	unsigned short int length;
+};
 
 struct DriveBody {
 	char direction : 1;
 	char duration : 1;
 	char speed : 1;
-}Body;
+};
 
 
 
@@ -44,7 +45,7 @@ class PktDef
 	struct CmdPacket {
 		Header head;
 		char* Data;
-		char CRC; //Cyclic Redundancy Check
+		unsigned char CRC; //Cyclic Redundancy Check
 	};
 
 	char* RawBuffer; //stores all data to send to robot
