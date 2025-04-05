@@ -18,6 +18,9 @@ enum CmdType {
 	ACK
 };
 
+//padding is being added without our consent, causing buffer overrun when memcpy?
+// potential solution below, prevents compiler padding
+//#pragma pack(push, 1)
 struct Header
 {
 	unsigned short int PktCount; //2 bytes
@@ -31,16 +34,13 @@ struct Header
 
 	unsigned short int length; //length of the body of the packet
 }Head;
+//#pragma pack(pop)
 
 struct DriveBody {
 	char direction;
 	char duration;
 	char speed;
 };
-
-
-//change sizeof(Header) to headersize? 
-
 
 class PktDef
 {
@@ -57,7 +57,7 @@ public:
 
 	//Default safe state - all header = 0, data pointer set null, crc = 0
 	PktDef() {
-		memset(&CmdPack.header, 0, sizeof(Header));
+		memset(&CmdPack.header, 0, headersize);
 		CmdPack.data = nullptr;
 		CmdPack.CRC = 0;
 
@@ -70,10 +70,10 @@ public:
 		RawBuffer = nullptr;
 
 		// Deserialize the Header (Copy PktCount, commands, (padding) and length)
-		memcpy(&CmdPack.header, data, sizeof(Header));
+		memcpy(&CmdPack.header, data, headersize);
 
 		//shift pointer past header now that it is set
-		data += sizeof(Header);
+		data += headersize;
 
 		if (CmdPack.header.length > 0) {
 			CmdPack.data = new char[CmdPack.header.length];
@@ -203,7 +203,7 @@ public:
 
 	char* GenPacket() {
 		// Calculate the total packet size
-		int packetSize = sizeof(Header) + CmdPack.header.length + sizeof(unsigned char); // CRC
+		int packetSize = headersize + CmdPack.header.length + sizeof(unsigned char); // CRC
 
 		// Free previous allocation if any
 		if (RawBuffer) {
@@ -221,8 +221,8 @@ public:
 		char* ptr = RawBuffer;
 
 		// Copy Header
-		memcpy(ptr, &CmdPack.header, sizeof(Header));
-		ptr += sizeof(Header);
+		memcpy(ptr, &CmdPack.header, headersize);
+		ptr += headersize;
 
 		// Copy Data (if present)
 		if (CmdPack.header.length > 0 && CmdPack.data) {
