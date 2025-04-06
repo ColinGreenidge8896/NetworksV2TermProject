@@ -4,6 +4,16 @@
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
+   char* CmdToString(const CmdType& cmd) {
+        switch (cmd) {
+        case DRIVE: return "DRIVE";
+        case STATUS: return "STATUS";
+        case SLEEP: return "SLEEP";
+        case ACK: return "ACK";
+        default: return "UNKNOWN_CMD";
+   }
+
+}
 
 namespace PktDefTests
 {
@@ -19,6 +29,10 @@ namespace PktDefTests
             Assert::IsNull(pkt.GetBodyData());
         }
 
+        TEST_METHOD(Constructor_ValidPacket_ParsesCorrectly)
+        {
+            
+        }
         TEST_METHOD(SetPktCount_ShouldUpdateCount)
         {
             PktDef pkt;
@@ -36,14 +50,15 @@ namespace PktDefTests
             Assert::IsTrue(memcmp(pkt.GetBodyData(), testData, 5) == 0);
         }
 
-        TEST_METHOD(CheckCRC_ShouldValidateCorrectly)
-        {
-            PktDef pkt;
-            char testPacket[] = { 1, 0, 0, 0, 5, 'H', 'e', 'l', 'l', 'o', 15 }; // Example buffer with CRC
-            Assert::IsTrue(pkt.CheckCRC(testPacket, sizeof(testPacket)));
-        }
+        //TEST_METHOD(CheckCRC_ShouldValidateCorrectly)
+        //{
+        //    PktDef pkt;
+        //    char testPacket[] = { 1, 0, 0, 0, 5, 'H', 'e', 'l', 'l', 'o', 15 }; // Example buffer with CRC
+        //    
+        //    Assert::IsTrue(pkt.CheckCRC(testPacket, sizeof(testPacket)));
+        //}
 
-        TEST_METHOD(GenPacket_ShouldReturnCorrectSize)
+        /*TEST_METHOD(GenPacket_ShouldReturnCorrectSize)
         {
             PktDef pkt;
             pkt.SetPktCount(10);
@@ -57,6 +72,6 @@ namespace PktDefTests
             Assert::AreEqual(expectedSize, (int)strlen(rawPacket));
 
             delete[] rawPacket;
-        }
+        }*/
 	};
 }

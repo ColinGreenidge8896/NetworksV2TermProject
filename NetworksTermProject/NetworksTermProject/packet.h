@@ -3,7 +3,7 @@
 #include <iostream>
 #include <fstream>
 
-const int headersize = 5; //header is 5 bytes total
+const int headerSize = 4; //header is 4 bytes total
 
 const int forward = 1;
 const int backward = 2;
@@ -20,7 +20,7 @@ enum CmdType {
 
 //padding is being added without our consent, causing buffer overrun when memcpy?
 // potential solution below, prevents compiler padding
-//#pragma pack(push, 1)
+
 struct Header
 {
 	unsigned short int PktCount; //2 bytes
@@ -29,12 +29,11 @@ struct Header
 	unsigned char status : 1;
 	unsigned char sleep : 1;
 	unsigned char ack : 1;
-
 	unsigned int padding : 4; //padding because of space required
 
-	unsigned short int length; //length of the body of the packet
+	unsigned char length; //length of the body of the packet
 }Head;
-//#pragma pack(pop)
+
 
 struct TelemetryBody {
     unsigned short LastPktCounter;
@@ -68,7 +67,7 @@ public:
 
 	//Default safe state - all header = 0, data pointer set null, crc = 0
 	PktDef() {
-		memset(&CmdPack.header, 0, headersize);
+		memset(&CmdPack.header, 0, headerSize);
 		CmdPack.data = nullptr;
 		CmdPack.CRC = 0;
 
@@ -81,10 +80,10 @@ public:
 		RawBuffer = nullptr;
 
 		// Deserialize the Header (Copy PktCount, commands, (padding) and length)
-		memcpy(&CmdPack.header, data, headersize);
+		memcpy(&CmdPack.header, data, headerSize);
 
 		//shift pointer past header now that it is set
-		data += headersize;
+		data += headerSize;
 
 		if (CmdPack.header.length > 0) {
 			CmdPack.data = new char[CmdPack.header.length];
@@ -195,7 +194,7 @@ public:
 	void CalcCRC() {
 		CmdPack.CRC = 0;
 		//Loop through each byte of the header 
-		for (int i = 0; i < sizeof(CmdPack.header); i++) {
+		for (int i = 0; i < headerSize; i++) {
 			unsigned char byte = ((char*)&CmdPack.header)[i];
 			//Count the number of bits in the byte 
 			for (int b = 0; b < 8; b++) {
@@ -213,8 +212,8 @@ public:
 	}
 
 	char* GenPacket() {
-		// Calculate the total packet size
-		int packetSize = headersize + CmdPack.header.length + sizeof(unsigned char); // CRC
+		// Calculate the total packet size - need to know size of body
+		int packetSize = headerSize + sizeof(*CmdPack.data) + sizeof(unsigned char); // CRC
 
 		// Free previous allocation if any
 		if (RawBuffer) {
@@ -232,8 +231,10 @@ public:
 		char* ptr = RawBuffer;
 
 		// Copy Header
-		memcpy(ptr, &CmdPack.header, headersize);
-		ptr += headersize;
+		memcpy(ptr, &CmdPack.header, headerSize);
+
+
+		ptr += headerSize;
 
 		// Copy Data (if present)
 		if (CmdPack.header.length > 0 && CmdPack.data) {

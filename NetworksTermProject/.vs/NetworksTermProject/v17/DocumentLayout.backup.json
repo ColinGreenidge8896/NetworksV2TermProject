@@ -3,24 +3,31 @@
   "WorkspaceRootPath": "E:\\GitHub\\NetworksV2TermProject\\NetworksTermProject\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{EBBDB5C4-C9E2-42D6-AEB2-4C4F7BEFDECA}|PktDefTests\\PktDefTests.vcxproj|E:\\GitHub\\NetworksV2TermProject\\NetworksTermProject\\PktDefTests\\PktDefTests.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{EBBDB5C4-C9E2-42D6-AEB2-4C4F7BEFDECA}|PktDefTests\\PktDefTests.vcxproj|solutionrelative:PktDefTests\\PktDefTests.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{7B733737-4890-41B8-B5C2-2DE886645A3C}|NetworksTermProject\\NetworksTermProject.vcxproj|E:\\GitHub\\NetworksV2TermProject\\NetworksTermProject\\NetworksTermProject\\packet.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{7B733737-4890-41B8-B5C2-2DE886645A3C}|NetworksTermProject\\NetworksTermProject.vcxproj|solutionrelative:NetworksTermProject\\packet.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{EBBDB5C4-C9E2-42D6-AEB2-4C4F7BEFDECA}|PktDefTests\\PktDefTests.vcxproj|E:\\GitHub\\NetworksV2TermProject\\NetworksTermProject\\PktDefTests\\PktDefTests.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{EBBDB5C4-C9E2-42D6-AEB2-4C4F7BEFDECA}|PktDefTests\\PktDefTests.vcxproj|solutionrelative:PktDefTests\\PktDefTests.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+      "AbsoluteMoniker": "D:0:0:{7B733737-4890-41B8-B5C2-2DE886645A3C}|NetworksTermProject\\NetworksTermProject.vcxproj|E:\\GitHub\\NetworksV2TermProject\\NetworksTermProject\\NetworksTermProject\\TestUtils.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{7B733737-4890-41B8-B5C2-2DE886645A3C}|NetworksTermProject\\NetworksTermProject.vcxproj|solutionrelative:NetworksTermProject\\TestUtils.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{7B733737-4890-41B8-B5C2-2DE886645A3C}|NetworksTermProject\\NetworksTermProject.vcxproj|E:\\GitHub\\NetworksV2TermProject\\NetworksTermProject\\NetworksTermProject\\packet.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{7B733737-4890-41B8-B5C2-2DE886645A3C}|NetworksTermProject\\NetworksTermProject.vcxproj|solutionrelative:NetworksTermProject\\packet.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{7B733737-4890-41B8-B5C2-2DE886645A3C}|NetworksTermProject\\NetworksTermProject.vcxproj|E:\\GitHub\\NetworksV2TermProject\\NetworksTermProject\\NetworksTermProject\\main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{7B733737-4890-41B8-B5C2-2DE886645A3C}|NetworksTermProject\\NetworksTermProject.vcxproj|solutionrelative:NetworksTermProject\\main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{EBBDB5C4-C9E2-42D6-AEB2-4C4F7BEFDECA}|PktDefTests\\PktDefTests.vcxproj|E:\\GitHub\\NetworksV2TermProject\\NetworksTermProject\\PktDefTests\\pch.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{EBBDB5C4-C9E2-42D6-AEB2-4C4F7BEFDECA}|PktDefTests\\PktDefTests.vcxproj|solutionrelative:PktDefTests\\pch.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{EBBDB5C4-C9E2-42D6-AEB2-4C4F7BEFDECA}|PktDefTests\\PktDefTests.vcxproj|E:\\PROGRAM FILES\\VISUAL STUDIO ENTERPRISE\\VC\\AUXILIARY\\VS\\UNITTEST\\INCLUDE\\CPPUNITTESTASSERT.H||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{7B733737-4890-41B8-B5C2-2DE886645A3C}|NetworksTermProject\\NetworksTermProject.vcxproj|E:\\GitHub\\NetworksV2TermProject\\NetworksTermProject\\NetworksTermProject\\main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{7B733737-4890-41B8-B5C2-2DE886645A3C}|NetworksTermProject\\NetworksTermProject.vcxproj|solutionrelative:NetworksTermProject\\main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     }
   ],
   "DocumentGroupContainers": [
@@ -30,7 +37,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 13,
+          "SelectedChildIndex": 12,
           "Children": [
             {
               "$type": "Bookmark",
@@ -70,6 +77,32 @@
             },
             {
               "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "TestUtils.cpp",
+              "DocumentMoniker": "E:\\GitHub\\NetworksV2TermProject\\NetworksTermProject\\NetworksTermProject\\TestUtils.cpp",
+              "RelativeDocumentMoniker": "NetworksTermProject\\TestUtils.cpp",
+              "ToolTip": "E:\\GitHub\\NetworksV2TermProject\\NetworksTermProject\\NetworksTermProject\\TestUtils.cpp",
+              "RelativeToolTip": "NetworksTermProject\\TestUtils.cpp",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2025-04-06T02:40:05.463Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "CppUnitTestAssert.h",
+              "DocumentMoniker": "E:\\Program Files\\Visual Studio Enterprise\\VC\\Auxiliary\\VS\\UnitTest\\include\\CppUnitTestAssert.h",
+              "RelativeDocumentMoniker": "..\\..\\..\\Program Files\\Visual Studio Enterprise\\VC\\Auxiliary\\VS\\UnitTest\\include\\CppUnitTestAssert.h",
+              "ToolTip": "E:\\Program Files\\Visual Studio Enterprise\\VC\\Auxiliary\\VS\\UnitTest\\include\\CppUnitTestAssert.h",
+              "RelativeToolTip": "..\\..\\..\\Program Files\\Visual Studio Enterprise\\VC\\Auxiliary\\VS\\UnitTest\\include\\CppUnitTestAssert.h",
+              "ViewState": "AgIAACcAAAAAAAAAAAAEwEIAAABQAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2025-04-06T02:09:19.817Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
               "DocumentIndex": 4,
               "Title": "pch.cpp",
               "DocumentMoniker": "E:\\GitHub\\NetworksV2TermProject\\NetworksTermProject\\PktDefTests\\pch.cpp",
@@ -83,20 +116,20 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 0,
               "Title": "PktDefTests.cpp",
               "DocumentMoniker": "E:\\GitHub\\NetworksV2TermProject\\NetworksTermProject\\PktDefTests\\PktDefTests.cpp",
               "RelativeDocumentMoniker": "PktDefTests\\PktDefTests.cpp",
               "ToolTip": "E:\\GitHub\\NetworksV2TermProject\\NetworksTermProject\\PktDefTests\\PktDefTests.cpp",
               "RelativeToolTip": "PktDefTests\\PktDefTests.cpp",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAADgAAAAsAAAAAAAAAA==",
+              "ViewState": "AgIAAAgAAAAAAAAAAADwvyEAAAAMAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
               "WhenOpened": "2025-04-05T19:04:10.896Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 3,
               "Title": "packet.cpp",
               "DocumentMoniker": "E:\\GitHub\\NetworksV2TermProject\\NetworksTermProject\\NetworksTermProject\\packet.cpp",
               "RelativeDocumentMoniker": "NetworksTermProject\\packet.cpp",
@@ -109,26 +142,26 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 6,
               "Title": "main.cpp",
               "DocumentMoniker": "E:\\GitHub\\NetworksV2TermProject\\NetworksTermProject\\NetworksTermProject\\main.cpp",
               "RelativeDocumentMoniker": "NetworksTermProject\\main.cpp",
               "ToolTip": "E:\\GitHub\\NetworksV2TermProject\\NetworksTermProject\\NetworksTermProject\\main.cpp",
               "RelativeToolTip": "NetworksTermProject\\main.cpp",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAQAAAAMAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
               "WhenOpened": "2025-04-05T18:20:57.819Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 1,
               "Title": "packet.h",
               "DocumentMoniker": "E:\\GitHub\\NetworksV2TermProject\\NetworksTermProject\\NetworksTermProject\\packet.h",
               "RelativeDocumentMoniker": "NetworksTermProject\\packet.h",
               "ToolTip": "E:\\GitHub\\NetworksV2TermProject\\NetworksTermProject\\NetworksTermProject\\packet.h",
               "RelativeToolTip": "NetworksTermProject\\packet.h",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABUAAAA2AAAAAAAAAA==",
+              "ViewState": "AgIAAGYAAAAAAAAAAAAAAHwAAAAZAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
               "WhenOpened": "2025-04-03T14:33:46.607Z",
               "EditorCaption": ""

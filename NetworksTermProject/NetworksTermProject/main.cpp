@@ -3,7 +3,7 @@
 #include "packet.h"
 
 int main() {
-   
+   /*
     char rawTelemetryPacket[headersize + sizeof(TelemetryBody) + 1] = {};
 
     PktDef pkt(rawTelemetryPacket);
@@ -18,7 +18,7 @@ int main() {
     std::cout << "  LastCmdValue:   " << (int)telemetry.LastCmdValue << "\n";
     std::cout << "  LastCmdSpeed:   " << (int)telemetry.LastCmdSpeed << "\n";
 
-    return 0;
+    return 0;*/
 }
 
 
