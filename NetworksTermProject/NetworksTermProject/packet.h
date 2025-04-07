@@ -18,13 +18,11 @@ enum CmdType {
 	ACK
 };
 
-//padding is being added without our consent, causing buffer overrun when memcpy?
-// potential solution below, prevents compiler padding
-
+//padding is being added without our consent, causing buffer overrun when memcpy
+#pragma pack(push, 1) // Force no padding
 struct Header
 {
 	unsigned short int PktCount; //2 bytes
-
 	unsigned char drive : 1; //1 bit each
 	unsigned char status : 1;
 	unsigned char sleep : 1;
@@ -32,8 +30,8 @@ struct Header
 	unsigned int padding : 4; //padding because of space required
 
 	unsigned char length; //length of the body of the packet
-}Head;
-
+}; //Got rid of "Head;"
+#pragma pack(pop) //restores the previous packing alignment
 
 struct TelemetryBody {
     unsigned short LastPktCounter;
@@ -42,7 +40,7 @@ struct TelemetryBody {
     unsigned char  LastCmd;
     unsigned char  LastCmdValue;
     unsigned char  LastCmdSpeed;
-}Telemetry;
+}; //Got rid of "Telemetry;"
 
 
 
@@ -124,13 +122,19 @@ public:
 		if (CmdPack.data) {
 			delete[] CmdPack.data;
 			CmdPack.data = nullptr;
-			//set length back to 0 whenever data is wiped
 			CmdPack.header.length = 0;
 		}
+
+		// Prevent crash if srcData is null or size <= 0
+		if (srcData == nullptr || size <= 0) {
+			return;
+		}
+
 		CmdPack.data = new char[size];
 		std::memcpy(CmdPack.data, srcData, size);
 		CmdPack.header.length = size;
 	}
+
 
 	//sets the objects PktCount header variable
 	void SetPktCount(int count) {
@@ -213,8 +217,8 @@ public:
 
 	char* GenPacket() {
 		// Calculate the total packet size - need to know size of body
-		int packetSize = headerSize + sizeof(*CmdPack.data) + sizeof(unsigned char); // CRC
-
+		int packetSize = headerSize + CmdPack.header.length + sizeof(unsigned char);
+	
 		// Free previous allocation if any
 		if (RawBuffer) {
 			delete[] RawBuffer;
@@ -231,7 +235,8 @@ public:
 		char* ptr = RawBuffer;
 
 		// Copy Header
-		memcpy(ptr, &CmdPack.header, headerSize);
+		
+		memcpy(ptr, &CmdPack.header, headerSize);	//Comeback 
 
 
 		ptr += headerSize;
@@ -243,18 +248,19 @@ public:
 		}
 
 		// Copy CRC
+
 		memcpy(ptr, &CmdPack.CRC, sizeof(unsigned char));
 
 		// Return the allocated RawBuffer
 		return RawBuffer;
 	}
 	
+	// Extracts the telemetry data from the packet
 	TelemetryBody GetTelemetry() {
 		TelemetryBody t{};
-		if (CmdPack.header.length == sizeof(TelemetryBody)) {
+		if (CmdPack.header.length == sizeof(TelemetryBody) && CmdPack.data != nullptr) {
 			std::memcpy(&t, CmdPack.data, sizeof(TelemetryBody));
 		}
 		return t;
 	}
-
 };
