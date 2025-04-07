@@ -86,7 +86,7 @@ public:
 		if (CmdPack.header.length > 0) {
 			CmdPack.data = new char[CmdPack.header.length];
 			//copy body data from packet into object
-			std::memcpy(CmdPack.data, data, CmdPack.header.length);
+			memcpy(CmdPack.data, data, CmdPack.header.length);
 		}
 		else {
 			if (CmdPack.data) {
@@ -97,7 +97,7 @@ public:
 
 		//copy crc
 		data += CmdPack.header.length;
-		std::memcpy(&CmdPack.CRC, data, sizeof(CmdPack.CRC));
+		memcpy(&CmdPack.CRC, data, sizeof(CmdPack.CRC));
 		RawBuffer = nullptr;
 	}
 
@@ -122,16 +122,16 @@ public:
 		if (CmdPack.data) {
 			delete[] CmdPack.data;
 			CmdPack.data = nullptr;
-			CmdPack.header.length = 0;
 		}
 
 		// Prevent crash if srcData is null or size <= 0
 		if (srcData == nullptr || size <= 0) {
+			CmdPack.header.length = 0;
 			return;
 		}
 
 		CmdPack.data = new char[size];
-		std::memcpy(CmdPack.data, srcData, size);
+		memcpy(CmdPack.data, srcData, size);
 		CmdPack.header.length = size;
 	}
 
@@ -222,14 +222,11 @@ public:
 		// Free previous allocation if any
 		if (RawBuffer) {
 			delete[] RawBuffer;
+			RawBuffer = nullptr;
 		}
 
 		// Allocate new RawBuffer
 		RawBuffer = new char[packetSize];
-		if (!RawBuffer) {
-			printf("RawBuffer allocation failed/n");
-			return nullptr;
-		}
 
 		// Pointer to track copy position
 		char* ptr = RawBuffer;
@@ -249,7 +246,7 @@ public:
 
 		// Copy CRC
 
-		memcpy(ptr, &CmdPack.CRC, sizeof(unsigned char));
+		memcpy(ptr, &CmdPack.CRC, sizeof(CmdPack.CRC));
 
 		// Return the allocated RawBuffer
 		return RawBuffer;
@@ -259,7 +256,7 @@ public:
 	TelemetryBody GetTelemetry() {
 		TelemetryBody t{};
 		if (CmdPack.header.length == sizeof(TelemetryBody) && CmdPack.data != nullptr) {
-			std::memcpy(&t, CmdPack.data, sizeof(TelemetryBody));
+			memcpy(&t, CmdPack.data, sizeof(TelemetryBody));
 		}
 		return t;
 	}
