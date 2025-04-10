@@ -132,6 +132,9 @@
     <ClCompile Include="packet.h" />
     <ClCompile Include="TestUtils.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="MySocket.h" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
