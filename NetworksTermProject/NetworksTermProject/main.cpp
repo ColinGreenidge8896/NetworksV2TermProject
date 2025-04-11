@@ -1,24 +1,37 @@
 #include "packet.h"
+#include "MySocket.h"
 #include <iostream>
-#include "packet.h"
+
+//example for starting server
+void runServer() {
+    try {
+        MySocket server(SERVER, "127.0.0.1", 8080, TCP, 1024);
+        std::cout << "Server is running on 127.0.0.1:8080..." << std::endl;
+
+        server.ConnectTCP();  // Accept incoming connection
+        std::cout << "Client connected!" << std::endl;
+
+        char buffer[1024] = { 0 };
+        int bytesReceived = server.GetData(buffer);
+
+        if (bytesReceived > 0) {
+            std::cout << "Server received: " << buffer << std::endl;
+        }
+
+        server.DisconnectTCP();
+        std::cout << "Server disconnected." << std::endl;
+    }
+    catch (const std::exception& e) {
+        std::cerr << "Server error: " << e.what() << std::endl;
+    }
+}
 
 int main() {
-   /*
-    char rawTelemetryPacket[headersize + sizeof(TelemetryBody) + 1] = {};
+   //The robot runs as a Server with a UDP socket command and responses
+    //we must make a Client with UDP socket
+    MySocket RobotClient(CLIENT, "localhost", 8080, UDP, 1024);
+    std::cout << "Client is running on localhost:8080..." << std::endl;
 
-    PktDef pkt(rawTelemetryPacket);
-
-    TelemetryBody telemetry = pkt.GetTelemetry();
-
-    std::cout << "Telemetry Data:\n";
-    std::cout << "  LastPktCounter: " << telemetry.LastPktCounter << "\n";
-    std::cout << "  CurrentGrade:   " << telemetry.CurrentGrade << "\n";
-    std::cout << "  HitCount:       " << telemetry.HitCount << "\n";
-    std::cout << "  LastCmd:        " << (int)telemetry.LastCmd << "\n";
-    std::cout << "  LastCmdValue:   " << (int)telemetry.LastCmdValue << "\n";
-    std::cout << "  LastCmdSpeed:   " << (int)telemetry.LastCmdSpeed << "\n";
-
-    return 0;*/
 }
 
 

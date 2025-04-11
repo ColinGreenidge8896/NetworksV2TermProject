@@ -1,21 +1,14 @@
+#ifndef MYSOCKET_H
+#define MYSOCKET_H
+
 #include <iostream>
 #include <string>
 #include <cstring>
-
-#ifdef _WIN32
+#include <stdexcept>
 #include <winsock2.h>
 #include <ws2tcpip.h>
-#pragma comment(lib, "Ws2_32.lib")  // Link Winsock library
-#define CLOSE_SOCKET(s) closesocket(s)
-#else
-#include <sys/socket.h>
-#include <arpa/inet.h>
-#include <unistd.h>
-#define CLOSE_SOCKET(s) close(s)
-#endif
-
-#ifndef MYSOCKET_H
-#define MYSOCKET_H
+#pragma comment(lib, "ws2_32.lib")  
+using namespace std;
 
 enum SocketType { CLIENT, SERVER };
 enum ConnectionType { TCP, UDP };
@@ -37,35 +30,27 @@ private:
 public:
     MySocket(SocketType type, std::string ip, unsigned int port, ConnectionType connType, unsigned int size)
         : mySocket(type), IPAddr(ip), Port(port), connectionType(connType), bTCPConnect(false) {
-
         MaxSize = (size > 0) ? size : DEFAULT_SIZE;
-
-#ifdef _WIN32
-        WSADATA wsaData;
-        if (WSAStartup(MAKEWORD(2, 2), &wsaData) != 0) {
-            std::cerr << "WSAStartup failed with error: " << WSAGetLastError() << std::endl;
-            exit(EXIT_FAILURE);
-        }
-#endif
         Buffer = new char[MaxSize];
         memset(&SvrAddr, 0, sizeof(SvrAddr));
 
         SvrAddr.sin_family = AF_INET;
         SvrAddr.sin_port = htons(Port);
-        //converts an IPv4 or IPv6 Internet network address in its standard text presentation form into its numeric binary form
         inet_pton(AF_INET, IPAddr.c_str(), &SvrAddr.sin_addr);
 
-        int typeFlag = (connectionType == TCP) ? SOCK_STREAM : SOCK_DGRAM;
-        WelcomeSocket = socket(AF_INET, typeFlag, 0);
+        if (connectionType == TCP) {
+            WelcomeSocket = socket(AF_INET, SOCK_STREAM, 0);
+        }
+        else {
+            WelcomeSocket = socket(AF_INET, SOCK_DGRAM, 0);
+        }
         if (WelcomeSocket < 0) {
-            std::cerr << "Socket creation failed!" << std::endl;
-            exit(EXIT_FAILURE);
+            throw std::runtime_error("Socket creation failed");
         }
 
         if (mySocket == SERVER) {
             if (bind(WelcomeSocket, (struct sockaddr*)&SvrAddr, sizeof(SvrAddr)) < 0) {
-                std::cerr << "Socket binding failed!" << std::endl;
-                exit(EXIT_FAILURE);
+                throw std::runtime_error("Socket binding failed");
             }
             if (connectionType == TCP) {
                 listen(WelcomeSocket, 5);
@@ -75,33 +60,27 @@ public:
 
     ~MySocket() {
         delete[] Buffer;
-        CLOSE_SOCKET(WelcomeSocket);
+        close(WelcomeSocket);
         if (bTCPConnect) {
-            CLOSE_SOCKET(ConnectionSocket);
+            close(ConnectionSocket);
         }
-#ifdef _WIN32
-        WSACleanup();
-#endif
     }
 
     void ConnectTCP() {
         if (connectionType == UDP) {
-            std::cerr << "UDP socket cannot establish a TCP connection" << std::endl;
-            return;
+            throw std::runtime_error("UDP socket cannot establish a TCP connection");
         }
         if (mySocket == CLIENT) {
             ConnectionSocket = socket(AF_INET, SOCK_STREAM, 0);
             if (connect(ConnectionSocket, (struct sockaddr*)&SvrAddr, sizeof(SvrAddr)) < 0) {
-                std::cerr << "TCP connection failed!" << std::endl;
-                return;
+                throw std::runtime_error("TCP connection failed");
             }
         }
         else {
             socklen_t addr_size = sizeof(SvrAddr);
             ConnectionSocket = accept(WelcomeSocket, (struct sockaddr*)&SvrAddr, &addr_size);
             if (ConnectionSocket < 0) {
-                std::cerr << "Accepting connection failed!" << std::endl;
-                return;
+                throw std::runtime_error("Accepting connection failed");
             }
         }
         bTCPConnect = true;
@@ -109,7 +88,7 @@ public:
 
     void DisconnectTCP() {
         if (!bTCPConnect) return;
-        CLOSE_SOCKET(ConnectionSocket);
+        close(ConnectionSocket);
         bTCPConnect = false;
     }
 
@@ -137,30 +116,22 @@ public:
 
     std::string GetIPAddr() { return IPAddr; }
     void SetIPAddr(std::string ip) {
-        if (bTCPConnect) {
-            std::cerr << "Cannot change IP address while connected!" << std::endl;
-            return;
-        }
+        if (bTCPConnect) throw std::runtime_error("Cannot change IP address while connected");
         IPAddr = ip;
     }
 
     int GetPort() { return Port; }
     void SetPort(int port) {
-        if (bTCPConnect) {
-            std::cerr << "Cannot change port while connected!" << std::endl;
-            return;
-        }
+        if (bTCPConnect) throw std::runtime_error("Cannot change port while connected");
         Port = port;
     }
 
     SocketType GetType() { return mySocket; }
     void SetType(SocketType type) {
-        if (bTCPConnect) {
-            std::cerr << "Cannot change socket type while connected!" << std::endl;
-            return;
-        }
+        if (bTCPConnect) throw std::runtime_error("Cannot change socket type while connected");
         mySocket = type;
     }
 };
 
 #endif // MYSOCKET_H
+

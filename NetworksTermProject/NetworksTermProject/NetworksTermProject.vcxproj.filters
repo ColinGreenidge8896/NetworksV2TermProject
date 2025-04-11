@@ -18,13 +18,7 @@
     <ClCompile Include="packet.h">
       <Filter>Header Files</Filter>
     </ClCompile>
-    <ClCompile Include="TestUtils.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="main.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="packet.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
