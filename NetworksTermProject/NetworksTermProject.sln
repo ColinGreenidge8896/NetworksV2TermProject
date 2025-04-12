@@ -7,6 +7,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "NetworksTermProject", "Netw
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PktDefTests", "PktDefTests\PktDefTests.vcxproj", "{EBBDB5C4-C9E2-42D6-AEB2-4C4F7BEFDECA}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SocketTests", "SocketTests\SocketTests.vcxproj", "{A013BE68-93CA-4A34-BEEB-2AE4C0E8E3DC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -31,6 +33,14 @@ Global
 		{EBBDB5C4-C9E2-42D6-AEB2-4C4F7BEFDECA}.Release|x64.Build.0 = Release|x64
 		{EBBDB5C4-C9E2-42D6-AEB2-4C4F7BEFDECA}.Release|x86.ActiveCfg = Release|Win32
 		{EBBDB5C4-C9E2-42D6-AEB2-4C4F7BEFDECA}.Release|x86.Build.0 = Release|Win32
+		{A013BE68-93CA-4A34-BEEB-2AE4C0E8E3DC}.Debug|x64.ActiveCfg = Debug|x64
+		{A013BE68-93CA-4A34-BEEB-2AE4C0E8E3DC}.Debug|x64.Build.0 = Debug|x64
+		{A013BE68-93CA-4A34-BEEB-2AE4C0E8E3DC}.Debug|x86.ActiveCfg = Debug|Win32
+		{A013BE68-93CA-4A34-BEEB-2AE4C0E8E3DC}.Debug|x86.Build.0 = Debug|Win32
+		{A013BE68-93CA-4A34-BEEB-2AE4C0E8E3DC}.Release|x64.ActiveCfg = Release|x64
+		{A013BE68-93CA-4A34-BEEB-2AE4C0E8E3DC}.Release|x64.Build.0 = Release|x64
+		{A013BE68-93CA-4A34-BEEB-2AE4C0E8E3DC}.Release|x86.ActiveCfg = Release|Win32
+		{A013BE68-93CA-4A34-BEEB-2AE4C0E8E3DC}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
