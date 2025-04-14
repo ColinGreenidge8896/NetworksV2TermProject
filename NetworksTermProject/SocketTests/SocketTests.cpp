@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "CppUnitTest.h"
 #include "../NetworksTermProject/MySocket.h"
+#include <thread>
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
@@ -32,6 +33,47 @@ namespace SocketTests
 
 			// No direct assert — successful creation without crash means test passed
 			Assert::AreEqual(std::string("127.0.0.1"), sock.GetIPAddr());
+		}
+
+		//----------------------------------------
+		// DESTRUCTOR TESTS
+
+		// This test verifies that no crash happens when object goes out of scope
+		TEST_METHOD(Destructor_CleansUpResources_NoCrash)
+		{
+			// Arrange & Act
+			{
+				MySocket sock(CLIENT, "127.0.0.1", 9010, TCP, 256);
+				sock.ConnectTCP();  // Will fail if no server, but won't crash
+			}  // Destructor will be called here when `sock` goes out of scope
+
+			// Assert
+			Assert::IsTrue(true);  // If no crash or resource issue, test passes
+		}
+
+		//----------------------------------------
+		// TCP CONNECTION TESTS
+
+		TEST_METHOD(TCP_ClientServer_Communication_Works)
+		{
+			// Server setup
+			MySocket server(SERVER, "127.0.0.1", 9010, TCP, 256);
+			//create server thread
+			std::thread serverThread([&server]() {
+				server.ConnectTCP(); //connect to client
+				char buffer[256] = {};
+				int received = server.GetData(buffer); //recv message from client
+				Assert::AreEqual("TCP Message", buffer); //assert
+				});
+
+			// Client setup
+			std::this_thread::sleep_for(std::chrono::milliseconds(100)); //wait for server to start
+			MySocket client(CLIENT, "127.0.0.1", 9010, TCP, 256);
+			client.ConnectTCP();
+			client.SendData("TCP Message", strlen("TCP Message"));//send a message to server
+
+			//blokcs main thread until server thread is done, making sure test completes before shutting thread down
+			serverThread.join();
 		}
 
 		//----------------------------------------
@@ -186,6 +228,25 @@ namespace SocketTests
 
 			// Assert
 			Assert::IsTrue(true);  // Should reach here without crashing
+		}
+
+		//----------------------------------------
+		// VALUE CHANGE PREVENTION TESTS - for preventing values from being changed while connected
+
+		//confirms that IP cannot be changed while connection is established
+		TEST_METHOD(SetIPAddr_WhileConnected_DoesNotChange)
+		{
+			MySocket server(SERVER, "127.0.0.1", 9020, TCP, 256);
+			//lambda function thread for server tcp connection
+			std::thread serverThread([&server]() { server.ConnectTCP(); });
+
+			MySocket client(CLIENT, "127.0.0.1", 9020, TCP, 256);
+			client.ConnectTCP();
+			//try to change IP while connected
+			client.SetIPAddr("192.168.1.1");
+
+			Assert::AreEqual(std::string("127.0.0.1"), client.GetIPAddr());
+			serverThread.join();
 		}
 
 	};
