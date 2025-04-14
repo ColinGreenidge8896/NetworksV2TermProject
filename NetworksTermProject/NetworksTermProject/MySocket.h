@@ -17,8 +17,13 @@
 #ifndef MYSOCKET_H
 #define MYSOCKET_H
 
+// Enum to define socket behavior for client and server
 enum SocketType { CLIENT, SERVER };
+
+// Enum to define connection protocol 
 enum ConnectionType { TCP, UDP };
+
+// Default size for buffer
 const int DEFAULT_SIZE = 1024;
 
 class MySocket {
@@ -35,12 +40,14 @@ private:
     int MaxSize;
 
 public:
+	// Constructor to initialize and configure socket
     MySocket(SocketType type, std::string ip, unsigned int port, ConnectionType connType, unsigned int size)
         : mySocket(type), IPAddr(ip), Port(port), connectionType(connType), bTCPConnect(false) {
 
         MaxSize = (size > 0) ? size : DEFAULT_SIZE;
 
 #ifdef _WIN32
+		// Initialize Winsock (windows specific)
         WSADATA wsaData;
         if (WSAStartup(MAKEWORD(2, 2), &wsaData) != 0) {
             std::cerr << "WSAStartup failed with error: " << WSAGetLastError() << std::endl;
@@ -55,6 +62,7 @@ public:
         //converts an IPv4 or IPv6 Internet network address in its standard text presentation form into its numeric binary form
         inet_pton(AF_INET, IPAddr.c_str(), &SvrAddr.sin_addr);
 
+		// Create socket for both TCP and UDP
         int typeFlag = (connectionType == TCP) ? SOCK_STREAM : SOCK_DGRAM;
         WelcomeSocket = socket(AF_INET, typeFlag, 0);
         if (WelcomeSocket < 0) {
@@ -67,12 +75,15 @@ public:
                 std::cerr << "Socket binding failed!" << std::endl;
                 exit(EXIT_FAILURE);
             }
+
+			//Start listening for incoming connections if TCP
             if (connectionType == TCP) {
                 listen(WelcomeSocket, 5);
             }
         }
     }
 
+	//Destructor to clean up memory
     ~MySocket() {
         delete[] Buffer;
         CLOSE_SOCKET(WelcomeSocket);
@@ -84,6 +95,7 @@ public:
 #endif
     }
 
+	// Function to establish TCP connection
     void ConnectTCP() {
         if (connectionType == UDP) {
             std::cerr << "UDP socket cannot establish a TCP connection" << std::endl;
@@ -107,12 +119,14 @@ public:
         bTCPConnect = true;
     }
 
+	// Disconnect TCP connection
     void DisconnectTCP() {
         if (!bTCPConnect) return;
         CLOSE_SOCKET(ConnectionSocket);
         bTCPConnect = false;
     }
 
+    // Send data to client and server
     void SendData(const char* data, int size) {
         if (connectionType == TCP) {
             send(ConnectionSocket, data, size, 0);
@@ -122,6 +136,7 @@ public:
         }
     }
 
+	// Receive data from client and server
     int GetData(char* dest) {
         int bytesReceived;
         if (connectionType == TCP) {
@@ -135,6 +150,7 @@ public:
         return bytesReceived;
     }
 
+	// Getters and Setters for IP address, port, and socket type
     std::string GetIPAddr() { return IPAddr; }
     void SetIPAddr(std::string ip) {
         if (bTCPConnect) {
