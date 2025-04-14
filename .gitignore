@@ -401,3 +401,4 @@ FodyWeavers.xsd
 NetworksTermProject/.vs/NetworksTermProject/v17/Browse.VC.db
 NetworksTermProject/.vs/NetworksTermProject/v17/Browse.VC.db
 NetworksTermProject/.vs/NetworksTermProject/v17/Solution.VC.db
+*.db

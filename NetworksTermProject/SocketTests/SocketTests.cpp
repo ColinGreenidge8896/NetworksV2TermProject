@@ -2,9 +2,17 @@
 #include "CppUnitTest.h"
 #include "../NetworksTermProject/MySocket.h"
 #include <thread>
+#include <string>
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
+//for getting string version of socket type
+std::string TypeToString(SocketType type) {
+	if (type == SERVER) {
+		return "SERVER";
+	}
+	else return "CLIENT";
+}
 namespace SocketTests
 {
 	TEST_CLASS(SocketTests)
@@ -248,6 +256,34 @@ namespace SocketTests
 			Assert::AreEqual(std::string("127.0.0.1"), client.GetIPAddr());
 			serverThread.join();
 		}
+		TEST_METHOD(SetPort_WhileConnected_DoesNotChange)
+		{
+			MySocket server(SERVER, "127.0.0.1", 9020, TCP, 256);
+			//lambda function thread for server tcp connection
+			std::thread serverThread([&server]() { server.ConnectTCP(); });
 
+			MySocket client(CLIENT, "127.0.0.1", 9020, TCP, 256);
+			client.ConnectTCP();
+			//try to change port
+			client.SetPortW(5000);
+
+			Assert::AreEqual(9020, client.GetPort());
+			serverThread.join();
+		}
+		TEST_METHOD(SetType_WhileConnected_DoesNotChange)
+		{
+			MySocket server(SERVER, "127.0.0.1", 9020, TCP, 256);
+			//lambda function thread for server tcp connection
+			std::thread serverThread([&server]() { server.ConnectTCP(); });
+
+			MySocket client(CLIENT, "127.0.0.1", 9020, TCP, 256);
+			client.ConnectTCP();
+			//try to change type
+			client.SetType(SERVER);
+
+			std::string expected = "CLIENT";
+			Assert::AreEqual(expected, TypeToString(client.GetType()));
+			serverThread.join();
+		}
 	};
 }
