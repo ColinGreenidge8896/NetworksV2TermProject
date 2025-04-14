@@ -16,7 +16,6 @@ int main() {
     packet.SetCmd(STATUS);       // This clears all and sets only Status = 1
     packet.SetAck(true);         // Manually also set Ack = 1
 
-
     // Build telemetry body (7 bytes) to make simulator happy
     TelemetryBody telemetry = {
         100,   // LastPktCounter
