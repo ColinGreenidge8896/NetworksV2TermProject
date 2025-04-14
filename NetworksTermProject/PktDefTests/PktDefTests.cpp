@@ -121,6 +121,7 @@ namespace PktDefTests
             Assert::AreEqual((int)STATUS, (int)result);
         }
 		//This test is used to verify command is not modified when set to ACK
+        //I think this test is failing bc we shouldnt be able to set ack? 
         TEST_METHOD(SetCmd_Ack_Return_NotModifedFlags)
         {
             // Arrange
@@ -140,7 +141,8 @@ namespace PktDefTests
 		//BODY DATA TESTS
 
 		//This test is used to verify vlaid data in body is set correctly for length 
-		TEST_METHOD(SetBodyData_ValidData_Returns_CorrectLength)
+		//this is failing because we were using length wrong probably
+        TEST_METHOD(SetBodyData_ValidData_Returns_CorrectLength)
 		{
 			// Arrange
 			PktDef pkt;
@@ -169,6 +171,7 @@ namespace PktDefTests
 			Assert::IsNull(bodyData);
 		}
 		//This test is used to verify body set twice will request only returns new data
+        //this is failing bc we were using length wrong probably
         TEST_METHOD(SetBodyData_Twice_Returns_OnlyNewData)
         {
             // Arrange
@@ -313,8 +316,11 @@ namespace PktDefTests
             char* raw = pkt.GenPacket();
             unsigned char crc = raw[headerSize + 1]; // header(4) + body(1) = CRC
 
+            //header has 3 1s, 1 for count and 2 for length of packet, which is 6 in digit or 0110 in binary
+            //8+3=11, expected 
+
             // Assert
-            Assert::AreEqual((unsigned char)9, crc); // 1 from header, 8 from body
+            Assert::AreEqual((unsigned char)11, crc); // 1 from header, 8 from body
         }
 
 		//--------------------------------------
@@ -339,6 +345,7 @@ namespace PktDefTests
         }
 
 		//This test is used to verify that a valid packet returns the correct layout
+        //test now passes with proper length values 
         TEST_METHOD(GenPacket_ValidPacket_Return_CorrectLayout)
         {
             // Arrange
@@ -355,7 +362,7 @@ namespace PktDefTests
             Assert::AreEqual((char)0x01, raw[0]);  // PktCount low byte
             Assert::AreEqual((char)0x01, raw[1]);  // PktCount high byte
             Assert::IsTrue((raw[2] & 0x02) != 0);  // status flag is set (bit 1)
-            Assert::AreEqual((char)1, raw[3]);     // Length = 1
+            Assert::AreEqual((char)6, raw[3]);     // Length = 6
             Assert::AreEqual((char)10, raw[4]);    // Body = 10
             Assert::AreEqual(pkt.CheckCRC(raw, 6), true); // CRC is valid
         }
@@ -386,6 +393,7 @@ namespace PktDefTests
 		//TELEMETRY TESTS
 
 		//This test is used to verify a valid telemetry packet returns the correct data
+        //not sure why this test is failing
         TEST_METHOD(GetTelemetry_ValidTelemetryPacket_Return_CorrectData)
         {
             // Arrange
@@ -394,7 +402,7 @@ namespace PktDefTests
 
             pkt.SetCmd(STATUS);
             pkt.SetBodyData(reinterpret_cast<char*>(&expected), sizeof(TelemetryBody));
-            pkt.SetPktCount(10);
+            pkt.SetPktCount(100);
             pkt.CalcCRC();
 
             // Act

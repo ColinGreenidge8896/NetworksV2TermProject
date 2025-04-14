@@ -1,21 +1,9 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "C:\\Users\\cbg75\\source\\repos\\NetworksV2TermProject\\NetworksTermProject\\",
+  "WorkspaceRootPath": "E:\\GitHub\\NetworksV2TermProject\\NetworksTermProject\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{A013BE68-93CA-4A34-BEEB-2AE4C0E8E3DC}|SocketTests\\SocketTests.vcxproj|C:\\Users\\cbg75\\source\\repos\\NetworksV2TermProject\\NetworksTermProject\\SocketTests\\SocketTests.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{A013BE68-93CA-4A34-BEEB-2AE4C0E8E3DC}|SocketTests\\SocketTests.vcxproj|solutionrelative:SocketTests\\SocketTests.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{7B733737-4890-41B8-B5C2-2DE886645A3C}|NetworksTermProject\\NetworksTermProject.vcxproj|C:\\Users\\cbg75\\source\\repos\\NetworksV2TermProject\\NetworksTermProject\\NetworksTermProject\\MySocket.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{7B733737-4890-41B8-B5C2-2DE886645A3C}|NetworksTermProject\\NetworksTermProject.vcxproj|solutionrelative:NetworksTermProject\\MySocket.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{7B733737-4890-41B8-B5C2-2DE886645A3C}|NetworksTermProject\\NetworksTermProject.vcxproj|C:\\Users\\cbg75\\source\\repos\\NetworksV2TermProject\\NetworksTermProject\\NetworksTermProject\\packet.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{7B733737-4890-41B8-B5C2-2DE886645A3C}|NetworksTermProject\\NetworksTermProject.vcxproj|solutionrelative:NetworksTermProject\\packet.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{7B733737-4890-41B8-B5C2-2DE886645A3C}|NetworksTermProject\\NetworksTermProject.vcxproj|C:\\Users\\cbg75\\source\\repos\\NetworksV2TermProject\\NetworksTermProject\\NetworksTermProject\\main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "AbsoluteMoniker": "D:0:0:{7B733737-4890-41B8-B5C2-2DE886645A3C}|NetworksTermProject\\NetworksTermProject.vcxproj|E:\\GitHub\\NetworksV2TermProject\\NetworksTermProject\\NetworksTermProject\\main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{7B733737-4890-41B8-B5C2-2DE886645A3C}|NetworksTermProject\\NetworksTermProject.vcxproj|solutionrelative:NetworksTermProject\\main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     }
   ],
@@ -26,20 +14,25 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 10,
+          "SelectedChildIndex": 0,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 0,
               "Title": "main.cpp",
-              "DocumentMoniker": "C:\\Users\\cbg75\\source\\repos\\NetworksV2TermProject\\NetworksTermProject\\NetworksTermProject\\main.cpp",
+              "DocumentMoniker": "E:\\GitHub\\NetworksV2TermProject\\NetworksTermProject\\NetworksTermProject\\main.cpp",
               "RelativeDocumentMoniker": "NetworksTermProject\\main.cpp",
-              "ToolTip": "C:\\Users\\cbg75\\source\\repos\\NetworksV2TermProject\\NetworksTermProject\\NetworksTermProject\\main.cpp",
+              "ToolTip": "E:\\GitHub\\NetworksV2TermProject\\NetworksTermProject\\NetworksTermProject\\main.cpp",
               "RelativeToolTip": "NetworksTermProject\\main.cpp",
-              "ViewState": "AgIAABIAAAAAAAAAAAAAAEEAAAANAAAAAAAAAA==",
+              "ViewState": "AgIAABAAAAAAAAAAAAAuwC8AAAA1AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
               "WhenOpened": "2025-04-13T21:10:34.423Z",
-              "IsPinned": true
+              "IsPinned": true,
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:128:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
             },
             {
               "$type": "Bookmark",
@@ -72,58 +65,6 @@
             {
               "$type": "Bookmark",
               "Name": "ST:0:0:{1c64b9c2-e352-428e-a56d-0ace190b99a6}"
-            },
-            {
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{34e76e81-ee4a-11d0-ae2e-00a0c90fffc3}"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "SocketTests.cpp",
-              "DocumentMoniker": "C:\\Users\\cbg75\\source\\repos\\NetworksV2TermProject\\NetworksTermProject\\SocketTests\\SocketTests.cpp",
-              "RelativeDocumentMoniker": "SocketTests\\SocketTests.cpp",
-              "ToolTip": "C:\\Users\\cbg75\\source\\repos\\NetworksV2TermProject\\NetworksTermProject\\SocketTests\\SocketTests.cpp",
-              "RelativeToolTip": "SocketTests\\SocketTests.cpp",
-              "ViewState": "AgIAAAMBAAAAAAAAAAAAABwBAAAoAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2025-04-12T20:01:02.312Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "packet.h",
-              "DocumentMoniker": "C:\\Users\\cbg75\\source\\repos\\NetworksV2TermProject\\NetworksTermProject\\NetworksTermProject\\packet.h",
-              "RelativeDocumentMoniker": "NetworksTermProject\\packet.h",
-              "ToolTip": "C:\\Users\\cbg75\\source\\repos\\NetworksV2TermProject\\NetworksTermProject\\NetworksTermProject\\packet.h",
-              "RelativeToolTip": "NetworksTermProject\\packet.h",
-              "ViewState": "AgIAAHsAAAAAAAAAAAAAAA0AAAAHAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
-              "WhenOpened": "2025-04-13T21:10:26.599Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "MySocket.h",
-              "DocumentMoniker": "C:\\Users\\cbg75\\source\\repos\\NetworksV2TermProject\\NetworksTermProject\\NetworksTermProject\\MySocket.h",
-              "RelativeDocumentMoniker": "NetworksTermProject\\MySocket.h",
-              "ToolTip": "C:\\Users\\cbg75\\source\\repos\\NetworksV2TermProject\\NetworksTermProject\\NetworksTermProject\\MySocket.h",
-              "RelativeToolTip": "NetworksTermProject\\MySocket.h",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAKwAAAAQAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
-              "WhenOpened": "2025-04-13T21:10:14.553Z",
-              "EditorCaption": ""
-            }
-          ]
-        },
-        {
-          "DockedWidth": 109,
-          "SelectedChildIndex": -1,
-          "Children": [
-            {
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{e1b7d1f8-9b3c-49b1-8f4f-bfc63a88835d}"
             }
           ]
         }

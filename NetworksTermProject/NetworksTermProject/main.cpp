@@ -9,29 +9,41 @@ int main() {
     MySocket RobotClient(CLIENT, "127.0.0.1", 5000, UDP, 1024);
     cout << "[Client] Preparing STATUS packet...\n";
 
-    // Step 2: Create STATUS packet with ACK
+    //// Step 2: Create STATUS packet with ACK
+    //PktDef packet;
+    //packet.SetPktCount(1);          // Packet count = 1
+    //packet.SetCmd(STATUS);          // Set status bit
+    //packet.SetCmd(STATUS);       // This clears all and sets only Status = 1
+    ////packet.SetAck(true);         // Manually also set Ack = 1
+
+    //// Build telemetry body (7 bytes) to make simulator happy
+    //TelemetryBody telemetry = {
+    //    100,   // LastPktCounter
+    //    89,    // CurrentGrade
+    //    2,     // HitCount
+    //    1,     // LastCmd
+    //    3,     // LastCmdValue
+    //    0      // LastCmdSpeed
+    //};
+
+    //packet.SetBodyData(reinterpret_cast<char*>(&telemetry), sizeof(TelemetryBody));
+
     PktDef packet;
-    packet.SetPktCount(1);          // Packet count = 1
-    packet.SetCmd(STATUS);          // Set status bit
-    packet.SetCmd(STATUS);       // This clears all and sets only Status = 1
-    packet.SetAck(true);         // Manually also set Ack = 1
-
-    // Build telemetry body (7 bytes) to make simulator happy
-    TelemetryBody telemetry = {
-        100,   // LastPktCounter
-        89,    // CurrentGrade
-        2,     // HitCount
-        1,     // LastCmd
-        3,     // LastCmdValue
-        0      // LastCmdSpeed
+    packet.SetPktCount(1);
+    packet.SetCmd(DRIVE);
+    DriveBody drive = {
+        1,
+        5,
+        90
     };
+    packet.SetBodyData(reinterpret_cast<char*>(&drive), sizeof(drive));
 
-    packet.SetBodyData(reinterpret_cast<char*>(&telemetry), sizeof(TelemetryBody));
     packet.CalcCRC();
+    
 
     // Step 3: Generate and send
     char* finalPacket = packet.GenPacket();
-    int totalSize = headerSize + packet.GetLength() + 1;
+    int totalSize = packet.GetLength();
 
     cout << "[Client] Sending STATUS packet (" << totalSize << " bytes)...\n";
     RobotClient.SendData(finalPacket, totalSize);
