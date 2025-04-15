@@ -10,67 +10,7 @@ crow::SimpleApp app;
 
 MySocket RobotClient(CLIENT, "127.0.0.1", 5000, UDP, 1024);
 
-    //// Step 2: Create STATUS packet with ACK
-    //PktDef packet;
-    //packet.SetPktCount(1);          // Packet count = 1
-    //packet.SetCmd(STATUS);          // Set status bit
-    //packet.SetCmd(STATUS);       // This clears all and sets only Status = 1
-    ////packet.SetAck(true);         // Manually also set Ack = 1
-
-    //// Build telemetry body (7 bytes) to make simulator happy
-    //TelemetryBody telemetry = {
-    //    100,   // LastPktCounter
-    //    89,    // CurrentGrade
-    //    2,     // HitCount
-    //    1,     // LastCmd
-    //    3,     // LastCmdValue
-    //    0      // LastCmdSpeed
-    //};
-
-    //packet.SetBodyData(reinterpret_cast<char*>(&telemetry), sizeof(TelemetryBody));
-
-    PktDef packet;
-    packet.SetPktCount(1);
-    packet.SetCmd(DRIVE);
-    DriveBody drive = {
-        1,
-        5,
-        90
-    };
-    packet.SetBodyData(reinterpret_cast<char*>(&drive), sizeof(drive));
-
-    packet.CalcCRC();
-    
-
-    // Step 3: Generate and send
-    char* finalPacket = packet.GenPacket();
-    int totalSize = packet.GetLength();
-
-    cout << "[Client] Sending STATUS packet (" << totalSize << " bytes)...\n";
-    RobotClient.SendData(finalPacket, totalSize);
-
-    // Step 4: Receive response
-    char recvBuf[1024] = {};
-    int bytesReceived = RobotClient.GetData(recvBuf);
-
-    if (bytesReceived > 0) {
-        cout << "[Client] Received " << bytesReceived << " bytes.\n";
-        PktDef response(recvBuf);
-
-        if (response.GetAck() && response.GetCmd() == STATUS) {
-            TelemetryBody t = response.GetTelemetry();
-            cout << "Telemetry:\n";
-            cout << "  LastPktCounter: " << t.LastPktCounter << "\n";
-            cout << "  CurrentGrade:   " << t.CurrentGrade << "\n";
-            cout << "  HitCount:       " << t.HitCount << "\n";
-            cout << "  LastCmd:        " << (int)t.LastCmd << "\n";
-            cout << "  LastCmdValue:   " << (int)t.LastCmdValue << "\n";
-            cout << "  LastCmdSpeed:   " << (int)t.LastCmdSpeed << "\n";
-        }
-        else {
-            cout << "Response was not a telemetry STATUS ACK.\n";
-        }
-// Reusable function to serve files from the public directory
+// Function to send a file as a response
 void sendFile(crow::response& res, const string& path) {
     ifstream file(path, ios::binary);
     ostringstream os;
@@ -171,7 +111,7 @@ int main() {
             pkt.CalcCRC();
 
             char* raw = pkt.GenPacket();
-            int totalSize = sizeof(Header) + pkt.GetLength() + 1;
+            int totalSize = pkt.GetLength();
 
             // Send packet to simulator
             RobotClient.SendData(raw, totalSize);
