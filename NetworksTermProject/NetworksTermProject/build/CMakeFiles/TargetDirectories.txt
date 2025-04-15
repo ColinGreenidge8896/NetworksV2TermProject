@@ -1,3 +1,0 @@
-/SharedRobot/build/CMakeFiles/hello_CSCN.dir
-/SharedRobot/build/CMakeFiles/edit_cache.dir
-/SharedRobot/build/CMakeFiles/rebuild_cache.dir

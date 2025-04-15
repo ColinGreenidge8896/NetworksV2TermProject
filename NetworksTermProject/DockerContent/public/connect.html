@@ -1,0 +1,26 @@
+<!-- public/connect.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Connect to Robot</title>
+    <link rel="stylesheet" href="/get_style/style.css">
+    <script src="/get_script/connect.js"></script>
+</head>
+<body>
+    <header>
+        <h1>Connect to Robot</h1>
+    </header>
+    <main style="text-align:center;">
+        <form id="connectForm" onsubmit="return connectToRobot();">
+            <label>Robot IP:</label>
+            <input type="text" id="robotIP" placeholder="127.0.0.1" required><br><br>
+            <label>Robot Port:</label>
+            <input type="number" id="robotPort" placeholder="5000" required><br><br>
+            <button type="submit">Connect</button>
+        </form>
+        <pre id="connectResult" style="margin-top:20px;"></pre>
+        <br><a href="/"><button>Back to Status Page</button></a>
+    </main>
+</body>
+</html>

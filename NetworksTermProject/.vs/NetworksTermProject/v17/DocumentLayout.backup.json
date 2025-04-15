@@ -3,6 +3,10 @@
   "WorkspaceRootPath": "C:\\Users\\alexr\\Desktop\\NetworksV2TermProject\\NetworksTermProject\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\alexr\\Desktop\\NetworksV2TermProject\\NetworksTermProject\\DockerContent\\main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:DockerContent\\main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{7B733737-4890-41B8-B5C2-2DE886645A3C}|NetworksTermProject\\NetworksTermProject.vcxproj|C:\\Users\\alexr\\Desktop\\NetworksV2TermProject\\NetworksTermProject\\NetworksTermProject\\main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{7B733737-4890-41B8-B5C2-2DE886645A3C}|NetworksTermProject\\NetworksTermProject.vcxproj|solutionrelative:NetworksTermProject\\main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
@@ -18,7 +22,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 7,
+          "SelectedChildIndex": 6,
           "Children": [
             {
               "$type": "Bookmark",
@@ -46,7 +50,20 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 0,
+              "Title": "main.cpp",
+              "DocumentMoniker": "C:\\Users\\alexr\\Desktop\\NetworksV2TermProject\\NetworksTermProject\\DockerContent\\main.cpp",
+              "RelativeDocumentMoniker": "DockerContent\\main.cpp",
+              "ToolTip": "C:\\Users\\alexr\\Desktop\\NetworksV2TermProject\\NetworksTermProject\\DockerContent\\main.cpp",
+              "RelativeToolTip": "DockerContent\\main.cpp",
+              "ViewState": "AgIAACoAAAAAAAAAAAAAADoAAAAlAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2025-04-15T01:05:44.88Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
               "Title": "packet.h",
               "DocumentMoniker": "C:\\Users\\alexr\\Desktop\\NetworksV2TermProject\\NetworksTermProject\\NetworksTermProject\\packet.h",
               "RelativeDocumentMoniker": "NetworksTermProject\\packet.h",
@@ -54,18 +71,17 @@
               "RelativeToolTip": "NetworksTermProject\\packet.h",
               "ViewState": "AgIAAFcAAAAAAAAAAAAAAHIAAAAbAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
-              "WhenOpened": "2025-04-14T23:59:44.234Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-04-14T23:59:44.234Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 1,
               "Title": "main.cpp",
               "DocumentMoniker": "C:\\Users\\alexr\\Desktop\\NetworksV2TermProject\\NetworksTermProject\\NetworksTermProject\\main.cpp",
               "RelativeDocumentMoniker": "NetworksTermProject\\main.cpp",
               "ToolTip": "C:\\Users\\alexr\\Desktop\\NetworksV2TermProject\\NetworksTermProject\\NetworksTermProject\\main.cpp",
               "RelativeToolTip": "NetworksTermProject\\main.cpp",
-              "ViewState": "AgIAAC0AAAAAAAAAAAAAADwAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAADwAAAAAAAAAAAAAAK4AAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
               "WhenOpened": "2025-04-14T23:45:44.907Z",
               "EditorCaption": ""

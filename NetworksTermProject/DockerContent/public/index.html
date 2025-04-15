@@ -1,0 +1,25 @@
+<!-- public/index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Robot Control Dashboard</title>
+    <link rel="stylesheet" href="/get_style/style.css">
+    <script src="/get_script/status.js"></script>
+</head>
+<body>
+    <header>
+        <h1>Robot Control Dashboard</h1>
+    </header>
+
+    <main style="text-align: center; margin-top: 40px;">
+        <h2>Status Monitor</h2>
+        <button onclick="fetchStatus()">Request Telemetry</button>
+        <pre id="output" style="margin-top: 20px; background-color: #f4f4f4; padding: 12px; border: 1px solid #ccc;"></pre>
+
+        <br><br>
+        <a href="/drive.html"><button>Go to Drive Control</button></a>
+        <a href="/connect.html"><button>Open Connect Page</button></a>
+    </main>
+</body>
+</html>
