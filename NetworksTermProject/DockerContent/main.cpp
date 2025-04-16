@@ -86,10 +86,10 @@ int main() {
         //this is the get the ack, need another to get the actual telem response
         int bytes = RobotClient->GetData(buffer);
         //check if ack in buffer
-        PktDef ackReponse(buffer);
+        PktDef ackResponse(buffer);
 
-        if (!ackResponse.GetAck() || ackResponse.GetCmd() == STATUS) {
-            res.write("Simulator responded, but not with STATUS ACK.\n");
+        if (!(ackResponse.GetAck())) {
+            res.write("Simulator responded, but not with ACK for telem request.\n");
             //do not continue to listen for second response
             res.end();
         }
@@ -99,6 +99,11 @@ int main() {
 
         if (bytes2 > 0) {
             PktDef response(buffer2);
+            CmdType packetType = response.GetCmd();
+            if(packetType != 'STATUS'){
+                res.write("Second packet was not of type STATUS, invalid telem response\n");
+                res.end();
+            }else{
                 TelemetryBody t = response.GetTelemetry();
                 ostringstream out;
                 out << "Telemetry Received:\n";
@@ -109,7 +114,7 @@ int main() {
                 out << "LastCmdValue:   " << (int)t.LastCmdValue << "\n";
                 out << "LastCmdSpeed:   " << (int)t.LastCmdSpeed << "\n";
                 res.write(out.str());
-            
+            }
         }
         else {
             res.write("No response from simulator.\n");
