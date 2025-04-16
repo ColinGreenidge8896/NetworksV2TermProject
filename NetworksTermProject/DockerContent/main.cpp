@@ -85,7 +85,10 @@ int main() {
         char buffer[1024] = {};
         //this is the get the ack, need another to get the actual telem response
         int bytes = RobotClient->GetData(buffer);
-        if (!response.GetAck() || response.GetCmd() == STATUS) {
+        //check if ack in buffer
+        PktDef ackReponse(buffer);
+
+        if (!ackResponse.GetAck() || ackResponse.GetCmd() == STATUS) {
             res.write("Simulator responded, but not with STATUS ACK.\n");
             //do not continue to listen for second response
             res.end();
