@@ -83,12 +83,19 @@ int main() {
         RobotClient->SendData(raw, totalSize);
 
         char buffer[1024] = {};
-        int bytes = RobotClient->GetData(buffer); //Get ACK     
-                                                    //Add get data for telemetry data (listen for message from robot)
+        //this is the get the ack, need another to get the actual telem response
+        int bytes = RobotClient->GetData(buffer);
+        if (!response.GetAck() || response.GetCmd() == STATUS) {
+            res.write("Simulator responded, but not with STATUS ACK.\n");
+            //do not continue to listen for second response
+            res.end();
+        }
+        //get telemetry body if ack success
+        char buffer2[1024]={};
+        int bytes2 = RobotClient->GetData(buffer2);
 
-        if (bytes > 0) {
-            PktDef response(buffer);
-            if (response.GetAck() && response.GetCmd() == STATUS) {
+        if (bytes2 > 0) {
+            PktDef response(buffer2);
                 TelemetryBody t = response.GetTelemetry();
                 ostringstream out;
                 out << "Telemetry Received:\n";
@@ -99,10 +106,7 @@ int main() {
                 out << "LastCmdValue:   " << (int)t.LastCmdValue << "\n";
                 out << "LastCmdSpeed:   " << (int)t.LastCmdSpeed << "\n";
                 res.write(out.str());
-            }
-            else {
-                res.write("Simulator responded, but not with STATUS ACK.\n");
-            }
+            
         }
         else {
             res.write("No response from simulator.\n");
