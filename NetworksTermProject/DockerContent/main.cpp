@@ -32,24 +32,16 @@ int main() {
     // Root GUI
     CROW_ROUTE(app, "/").methods(crow::HTTPMethod::GET)([](const crow::request&, crow::response& res) {
         sendFile(res, "../public/index.html");
-        });
+    });
 
     // Serve static files
     CROW_ROUTE(app, "/get_style/<string>").methods(crow::HTTPMethod::GET)([](const crow::request&, crow::response& res, string filename) {
         sendFile(res, "../public/styles/" + filename);
-        });
+    });
 
     CROW_ROUTE(app, "/get_script/<string>").methods(crow::HTTPMethod::GET)([](const crow::request&, crow::response& res, string filename) {
         sendFile(res, "../public/scripts/" + filename);
-        });
-
-    CROW_ROUTE(app, "/drive.html").methods(crow::HTTPMethod::GET)([](const crow::request&, crow::response& res) {
-        sendFile(res, "../public/drive.html");
-        });
-
-    CROW_ROUTE(app, "/connect.html").methods(crow::HTTPMethod::GET)([](const crow::request&, crow::response& res) {
-        sendFile(res, "../public/connect.html");
-        });
+    });
 
     // POST: /connect/IP/PORT
     CROW_ROUTE(app, "/connect/<string>/<int>").methods(crow::HTTPMethod::POST)([](const crow::request&, crow::response& res, string ip, int port) {
@@ -64,7 +56,7 @@ int main() {
         res.code = 200;
         res.write("Connection info set: IP = " + ip + ", Port = " + to_string(port));
         res.end();
-        });
+    });
 
     // GET: /telemetry_request/
     CROW_ROUTE(app, "/telemetry_request/").methods(crow::HTTPMethod::GET)([](const crow::request&, crow::response& res) {
@@ -82,16 +74,17 @@ int main() {
         pkt.SetCmd(STATUS);
         pkt.SetAck(true);
 
-        TelemetryBody telemetry = { 100, 89, 2, 1, 3, 0 };
+        TelemetryBody telemetry = {};
         pkt.SetBodyData(reinterpret_cast<char*>(&telemetry), sizeof(TelemetryBody));
         pkt.CalcCRC();
 
         char* raw = pkt.GenPacket();
-        int totalSize = sizeof(Header) + pkt.GetLength() + 1;
+        int totalSize = pkt.GetLength();  // ✅ FIXED: Correct total size
         RobotClient->SendData(raw, totalSize);
 
         char buffer[1024] = {};
-        int bytes = RobotClient->GetData(buffer);
+        int bytes = RobotClient->GetData(buffer); //Get ACK     
+                                                    //Add get data for telemetry data (listen for message from robot)
 
         if (bytes > 0) {
             PktDef response(buffer);
@@ -116,7 +109,7 @@ int main() {
         }
 
         res.end();
-        });
+    });
 
     // PUT: /telecommand/DIR/DURATION/SPEED
     CROW_ROUTE(app, "/telecommand/<int>/<int>/<int>").methods(crow::HTTPMethod::PUT)([](const crow::request&, crow::response& res, int direction, int duration, int speed) {
@@ -144,7 +137,7 @@ int main() {
         pkt.CalcCRC();
 
         char* raw = pkt.GenPacket();
-        int totalSize = pkt.GetLength();
+        int totalSize = pkt.GetLength();  
         RobotClient->SendData(raw, totalSize);
 
         char buffer[1024] = {};
@@ -167,7 +160,7 @@ int main() {
         }
 
         res.end();
-        });
+    });
 
     app.port(5000).multithreaded().run();
     return 0;

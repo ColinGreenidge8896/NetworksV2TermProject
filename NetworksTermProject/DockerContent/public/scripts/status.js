@@ -1,11 +1,11 @@
 // public/scripts/status.js
 function fetchStatus() {
-    fetch("/status")
+    fetch("/telemetry_request/")
         .then(response => response.text())
         .then(data => {
-            document.getElementById("output").textContent = data;
+            document.getElementById("telemetryOutput").value = data;
         })
         .catch(err => {
-            document.getElementById("output").textContent = "Error fetching telemetry.\n" + err;
+            document.getElementById("telemetryOutput").value = "Error fetching telemetry.\n" + err;
         });
 }
