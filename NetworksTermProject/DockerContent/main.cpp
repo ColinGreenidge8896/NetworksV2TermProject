@@ -113,89 +113,114 @@ int main() {
     });
 
     // PUT: /telecommand
-    CROW_ROUTE(app, "/telecommand").methods(crow::HTTPMethod::PUT)([](const crow::request& req, crow::response& res) {
+    CROW_ROUTE(app, "/telecommand").methods(crow::HTTPMethod::PUT)
+        ([](const crow::request& req, crow::response& res) {
         res.set_header("Content-Type", "text/plain");
 
-        if (RobotClient == nullptr) {
+        if (!RobotClient) {
             res.code = 400;
             res.write("Robot not connected. Use /connect first.");
             res.end();
             return;
         }
 
-        // Parse request body for optional drive parameters
-        auto body = crow::json::load(req.body);
-        PktDef pkt;
-
-        if (!body || !body.has("command")) {
-            res.code = 400;
-            res.write("Missing command type.\n");
-            res.end();
-            return;
-        }
-
-        std::string cmd = body["command"].s();
-        if (cmd == "drive") {
-            if (!(body.has("direction") && body.has("duration") && body.has("speed"))) {
+        try {
+            auto json = crow::json::load(req.body);
+            if (!json) {
                 res.code = 400;
-                res.write("Missing drive parameters.\n");
+                res.write("Invalid JSON body.\n");
                 res.end();
                 return;
             }
 
-            pkt.SetPktCount(2);
-            pkt.SetCmd(DRIVE);
+            std::string command = json["command"].s();
 
-            DriveBody drive = {
-                static_cast<char>(body["direction"].i()),
-                static_cast<char>(body["duration"].i()),
-                static_cast<char>(body["speed"].i())
-            };
+            if (command == "drive") {
+                int direction = json["direction"].i();
+                int duration = json["duration"].i();
+                int speed = json["speed"].i();
 
-            pkt.SetBodyData(reinterpret_cast<char*>(&drive), sizeof(DriveBody));
-        }
-        else if (cmd == "sleep") {
-            pkt.SetPktCount(3);
-            pkt.SetCmd(SLEEP);
+                PktDef pkt;
+                pkt.SetPktCount(2);
+                pkt.SetCmd(DRIVE);
+                DriveBody drive = {
+                    static_cast<char>(direction),
+                    static_cast<char>(duration),
+                    static_cast<char>(speed)
+                };
+                pkt.SetBodyData(reinterpret_cast<char*>(&drive), sizeof(DriveBody));
+                pkt.CalcCRC();
 
-        }
-        else {
-            res.code = 400;
-            res.write("Unknown command.\n");
-            res.end();
-            return;
-        }
+                char* raw = pkt.GenPacket();
+                int totalSize = pkt.GetLength();
+                RobotClient->SendData(raw, totalSize);
 
-        pkt.CalcCRC();
+                char buffer[1024] = {};
+                int bytes = RobotClient->GetData(buffer);
+                if (bytes > 0) {
+                    PktDef response(buffer);
+                    if (response.GetAck() && response.GetCmd() == DRIVE) {
+                        res.write("Drive command acknowledged.\n");
+                    }
+                    else {
+                        res.code = 400;
+                        res.write("Simulator responded, but not with DRIVE ACK.\n");
+                    }
+                }
+                else {
+                    res.code = 500;
+                    res.write("No response from simulator.\n");
+                }
+            }
 
-        char* raw = pkt.GenPacket();
-        int totalSize = pkt.GetLength();
-        RobotClient->SendData(raw, totalSize);
 
-        char buffer[1024] = {};
-        int bytes = RobotClient->GetData(buffer);
 
-        if (bytes > 0) {
-            PktDef response(buffer);
-            CmdType rCmd = response.GetCmd();
+        //-----------------------------------------------------------------------------------//
 
-            if (response.GetAck() && rCmd == pkt.GetCmd()) {
-                res.code = 200;
-                if (rCmd == DRIVE) res.write("Drive command acknowledged.\n");
-                else if (rCmd == SLEEP) res.write("Robot put to sleep. Goodnight.\n");
+
+
+
+            else if (command == "sleep") {
+                PktDef pkt;
+                pkt.SetPktCount(3);
+                pkt.SetCmd(SLEEP);
+				pkt.SetBodyData(nullptr, 0); // No body data for sleep command
+                pkt.CalcCRC();
+
+                char* raw = pkt.GenPacket();
+                int totalSize = pkt.GetLength();
+                CROW_LOG_INFO << totalSize;
+                RobotClient->SendData(raw, totalSize);
+
+                char buffer[1024] = {};
+                int bytes = RobotClient->GetData(buffer);
+                if (bytes > 0) {
+                    PktDef response(buffer);
+                    if (response.GetAck() && response.GetCmd() == SLEEP) {
+                        res.write("Robot put to sleep. Goodnight.\n");
+                    }
+                    else {
+                        res.code = 400;
+                        res.write("Simulator responded, but not with SLEEP ACK.\n");
+                    }
+                }
+                else {
+                    res.code = 500;
+                    res.write("No response from simulator.\n");
+                }
             }
             else {
                 res.code = 400;
-                res.write("Simulator responded, but not with expected ACK.\n");
+                res.write("Unknown command.\n");
             }
         }
-        else {
+        catch (const std::exception& e) {
             res.code = 500;
-            res.write("No response from simulator.\n");
+            res.write(std::string("Exception: ") + e.what());
         }
 
         res.end();
-        });
+            });
 
 
     app.port(5000).multithreaded().run();
