@@ -13,6 +13,7 @@ string robotIP = "127.0.0.1";
 int robotPort = 5000;
 MySocket *RobotClient = nullptr;
 
+//counter for packetcount
 int counter;
 
 // Helper to serve files from ./public/
@@ -82,6 +83,7 @@ int main()
                                                                           {
         res.set_header("Content-Type", "text/plain");
 
+        //if no socket connection established
         if (RobotClient == nullptr) {
             res.code = 400;
             res.write("Robot not connected. Use /connect first.");
@@ -91,6 +93,7 @@ int main()
 
         PktDef pkt;
         pkt.SetPktCount(++counter);
+        
         pkt.SetCmd(STATUS);
 
         pkt.CalcCRC();
@@ -143,6 +146,7 @@ int main()
             return;
         }
 
+        //using json to transmit additional conditions to same crow route (drive or sleep)
         try {
             auto json = crow::json::load(req.body);
             if (!json) {
@@ -164,11 +168,14 @@ int main()
                 PktDef pkt;
                 pkt.SetPktCount(++counter);
                 pkt.SetCmd(DRIVE);
+
+                //create drivebody from user input
                 DriveBody drive = {
                     static_cast<char>(direction),
                     static_cast<char>(duration),
                     static_cast<char>(speed)
                 };
+
                 pkt.SetBodyData(reinterpret_cast<char*>(&drive), sizeof(DriveBody));
                 pkt.CalcCRC();
 
@@ -204,7 +211,6 @@ int main()
 
                 char* raw = pkt.GenPacket();
                 int totalSize = pkt.GetLength();
-                CROW_LOG_INFO << totalSize;
                 RobotClient->SendData(raw, totalSize);
 
                 char buffer[1024] = {};
