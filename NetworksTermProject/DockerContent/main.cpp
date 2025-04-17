@@ -11,40 +11,42 @@ crow::SimpleApp app;
 // Will be set by /connect
 string robotIP = "127.0.0.1";
 int robotPort = 5000;
-MySocket* RobotClient = nullptr;
+MySocket *RobotClient = nullptr;
 
 // Helper to serve files from ./public/
-void sendFile(crow::response& res, const string& path) {
+void sendFile(crow::response &res, const string &path)
+{
     ifstream file(path, ios::binary);
     ostringstream os;
-    if (file) {
+    if (file)
+    {
         os << file.rdbuf();
         res.write(os.str());
     }
-    else {
+    else
+    {
         res.code = 404;
         res.write("File Not Found: " + path);
     }
     res.end();
 }
 
-int main() {
+int main()
+{
     // Root GUI
-    CROW_ROUTE(app, "/").methods(crow::HTTPMethod::GET)([](const crow::request&, crow::response& res) {
-        sendFile(res, "../public/index.html");
-    });
+    CROW_ROUTE(app, "/").methods(crow::HTTPMethod::GET)([](const crow::request &, crow::response &res)
+                                                        { sendFile(res, "../public/index.html"); });
 
     // Serve static files
-    CROW_ROUTE(app, "/get_style/<string>").methods(crow::HTTPMethod::GET)([](const crow::request&, crow::response& res, string filename) {
-        sendFile(res, "../public/styles/" + filename);
-    });
+    CROW_ROUTE(app, "/get_style/<string>").methods(crow::HTTPMethod::GET)([](const crow::request &, crow::response &res, string filename)
+                                                                          { sendFile(res, "../public/styles/" + filename); });
 
-    CROW_ROUTE(app, "/get_script/<string>").methods(crow::HTTPMethod::GET)([](const crow::request&, crow::response& res, string filename) {
-        sendFile(res, "../public/scripts/" + filename);
-    });
+    CROW_ROUTE(app, "/get_script/<string>").methods(crow::HTTPMethod::GET)([](const crow::request &, crow::response &res, string filename)
+                                                                           { sendFile(res, "../public/scripts/" + filename); });
 
     // POST: /connect/IP/PORT
-    CROW_ROUTE(app, "/connect/<string>/<int>").methods(crow::HTTPMethod::POST)([](const crow::request&, crow::response& res, string ip, int port) {
+    CROW_ROUTE(app, "/connect/<string>/<int>").methods(crow::HTTPMethod::POST)([](const crow::request &, crow::response &res, string ip, int port)
+                                                                               {
         robotIP = ip;
         robotPort = port;
 
@@ -55,11 +57,11 @@ int main() {
         RobotClient = new MySocket(CLIENT, robotIP, robotPort, UDP, 1024);
         res.code = 200;
         res.write("Connection info set: IP = " + ip + ", Port = " + to_string(port));
-        res.end();
-    });
+        res.end(); });
 
     // GET: /telemetry_request/
-    CROW_ROUTE(app, "/telemetry_request/").methods(crow::HTTPMethod::GET)([](const crow::request&, crow::response& res) {
+    CROW_ROUTE(app, "/telemetry_request/").methods(crow::HTTPMethod::GET)([](const crow::request &, crow::response &res)
+                                                                          {
         res.set_header("Content-Type", "text/plain");
 
         if (RobotClient == nullptr) {
@@ -73,8 +75,6 @@ int main() {
         pkt.SetPktCount(1);
         pkt.SetCmd(STATUS);
 
-        TelemetryBody telemetry = {};
-        pkt.SetBodyData(reinterpret_cast<char*>(&telemetry), sizeof(TelemetryBody));
         pkt.CalcCRC();
 
         char* raw = pkt.GenPacket();
@@ -109,12 +109,11 @@ int main() {
         out << "LastCmdSpeed:   " << (int)t.LastCmdSpeed << "\n";
         res.write(out.str());
 
-        res.end();
-    });
+        res.end(); });
 
     // PUT: /telecommand
-    CROW_ROUTE(app, "/telecommand").methods(crow::HTTPMethod::PUT)
-        ([](const crow::request& req, crow::response& res) {
+    CROW_ROUTE(app, "/telecommand").methods(crow::HTTPMethod::PUT)([](const crow::request &req, crow::response &res)
+                                                                   {
         res.set_header("Content-Type", "text/plain");
 
         if (!RobotClient) {
@@ -184,7 +183,7 @@ int main() {
                 PktDef pkt;
                 pkt.SetPktCount(3);
                 pkt.SetCmd(SLEEP);
-				pkt.SetBodyData(nullptr, 0); // No body data for sleep command
+
                 pkt.CalcCRC();
 
                 char* raw = pkt.GenPacket();
@@ -219,9 +218,7 @@ int main() {
             res.write(std::string("Exception: ") + e.what());
         }
 
-        res.end();
-            });
-
+        res.end(); });
 
     app.port(5000).multithreaded().run();
     return 0;
