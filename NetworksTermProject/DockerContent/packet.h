@@ -230,7 +230,7 @@ public:
 	//Convert body into a TelemetryBody struct
 	TelemetryBody GetTelemetry() {
 		TelemetryBody t{};
-		if (CmdPack.header.length == sizeof(TelemetryBody) && CmdPack.data != nullptr) {
+		if (CmdPack.data != nullptr) {
 			memcpy(&t, CmdPack.data, sizeof(TelemetryBody));
 		}
 		return t;

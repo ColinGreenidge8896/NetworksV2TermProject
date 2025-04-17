@@ -72,14 +72,13 @@ int main() {
         PktDef pkt;
         pkt.SetPktCount(1);
         pkt.SetCmd(STATUS);
-        pkt.SetAck(true);
 
         TelemetryBody telemetry = {};
         pkt.SetBodyData(reinterpret_cast<char*>(&telemetry), sizeof(TelemetryBody));
         pkt.CalcCRC();
 
         char* raw = pkt.GenPacket();
-        int totalSize = pkt.GetLength();  // ✅ FIXED: Correct total size
+        int totalSize = pkt.GetLength();  
         RobotClient->SendData(raw, totalSize);
 
         char buffer[1024] = {};
@@ -92,33 +91,23 @@ int main() {
             res.write("Simulator responded, but not with ACK for telem request.\n");
             //do not continue to listen for second response
             res.end();
+            return;
         }
         //get telemetry body if ack success
-        char buffer2[1024]={};
+        char buffer2[1024] = {};
         int bytes2 = RobotClient->GetData(buffer2);
 
-        if (bytes2 > 0) {
-            PktDef response(buffer2);
-            CmdType packetType = response.GetCmd();
-            if(packetType != 'STATUS'){
-                res.write("Second packet was not of type STATUS, invalid telem response\n");
-                res.end();
-            }else{
-                TelemetryBody t = response.GetTelemetry();
-                ostringstream out;
-                out << "Telemetry Received:\n";
-                out << "LastPktCounter: " << t.LastPktCounter << "\n";
-                out << "CurrentGrade:   " << t.CurrentGrade << "\n";
-                out << "HitCount:       " << t.HitCount << "\n";
-                out << "LastCmd:        " << (int)t.LastCmd << "\n";
-                out << "LastCmdValue:   " << (int)t.LastCmdValue << "\n";
-                out << "LastCmdSpeed:   " << (int)t.LastCmdSpeed << "\n";
-                res.write(out.str());
-            }
-        }
-        else {
-            res.write("No response from simulator.\n");
-        }
+        PktDef response(buffer2);
+        TelemetryBody t = response.GetTelemetry();
+        ostringstream out;
+        out << "Telemetry Received:\n";
+        out << "LastPktCounter: " << t.LastPktCounter << "\n";
+        out << "CurrentGrade:   " << t.CurrentGrade << "\n";
+        out << "HitCount:       " << t.HitCount << "\n";
+        out << "LastCmd:        " << (int)t.LastCmd << "\n";
+        out << "LastCmdValue:   " << (int)t.LastCmdValue << "\n";
+        out << "LastCmdSpeed:   " << (int)t.LastCmdSpeed << "\n";
+        res.write(out.str());
 
         res.end();
     });
@@ -137,7 +126,6 @@ int main() {
         PktDef pkt;
         pkt.SetPktCount(2);
         pkt.SetCmd(DRIVE);
-        pkt.SetAck(true);
 
         DriveBody drive = {
             static_cast<char>(direction),
@@ -173,6 +161,50 @@ int main() {
 
         res.end();
     });
+
+    CROW_ROUTE(app, "/sleep").methods(crow::HTTPMethod::PUT)([](const crow::request&, crow::response& res) {
+        res.set_header("Content-Type", "text/plain");
+
+        if (RobotClient == nullptr) {
+            res.code = 400;
+            res.write("Robot not connected. Use /connect first.");
+            res.end();
+            return;
+        }
+
+        PktDef pkt;
+        pkt.SetPktCount(3);     // Same format as other commands
+        pkt.SetCmd(SLEEP);      // Set sleep flag
+
+        //pkt.SetBodyData(nullptr, 0); // No body for sleep
+        pkt.CalcCRC();
+
+        char* raw = pkt.GenPacket();
+        int totalSize = pkt.GetLength();
+        RobotClient->SendData(raw, totalSize);
+
+        char buffer[1024] = {};
+        int bytes = RobotClient->GetData(buffer);
+
+        if (bytes > 0) {
+            PktDef response(buffer);
+            if (response.GetAck() && response.GetCmd() == SLEEP) {
+                res.code = 200;
+                res.write("Robot put to sleep. 💤 Goodnight.\n");
+            }
+            else {
+                res.code = 400;
+                res.write("Simulator responded, but not with SLEEP ACK.\n");
+            }
+        }
+        else {
+            res.code = 500;
+            res.write("No response from simulator.\n");
+        }
+
+        res.end();
+        });
+
 
     app.port(5000).multithreaded().run();
     return 0;

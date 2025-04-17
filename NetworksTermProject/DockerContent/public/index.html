@@ -7,6 +7,7 @@
     <script src="/get_script/status.js"></script>
     <script src="/get_script/drive.js"></script>
     <script src="/get_script/connect.js"></script>
+    <script src="/get_script/sleep.js"></script>
 </head>
 <body>
     <header>
@@ -62,6 +63,14 @@
             <br><br>
             <textarea id="telemetryOutput" rows="8" cols="70" readonly style="background-color: #f4f4f4; padding: 12px; border: 1px solid #ccc;"></textarea>
         </section>
+
+        <!-- Sleep Section -->
+        <section style="margin-top: 40px;">
+            <h2>Sleep Command</h2>
+            <button onclick="putRobotToSleep()">Put Robot to Sleep</button>
+            <pre id="sleepResult" style="margin-top: 20px;"></pre>
+        </section>
+
     </main>
 </body>
 </html>
