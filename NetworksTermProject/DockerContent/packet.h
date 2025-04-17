@@ -66,10 +66,10 @@ private:
 	struct CmdPacket
 	{
 		Header header;
-		char *data;
+		char* data;
 		unsigned char CRC; // Cyclic Redundancy Check
 	} CmdPack;
-	char *RawBuffer; // stores all data to send to robot
+	char* RawBuffer; // stores all data to send to robot
 
 public:
 	// Default safe state - all header = 0, data pointer set null, crc = 0
@@ -82,7 +82,7 @@ public:
 		RawBuffer = nullptr;
 	}
 	// Populates the Header, Body, and CRC contents of the PktDef object
-	PktDef(char *data)
+	PktDef(char* data)
 	{
 		RawBuffer = nullptr;
 		// Deserialize the Header (Copy PktCount, commands, (padding) and length)
@@ -150,7 +150,7 @@ public:
 
 	// Replace packet body with new data and update header length
 	// pass in size of body
-	void SetBodyData(char *srcData, int size)
+	void SetBodyData(char* srcData, int size)
 	{
 		if (CmdPack.data)
 		{
@@ -199,7 +199,7 @@ public:
 	}
 
 	// Return pointer to body data
-	char *GetBodyData()
+	char* GetBodyData()
 	{
 		return CmdPack.data;
 	}
@@ -211,7 +211,7 @@ public:
 	}
 
 	// Calculate the CRC for the packet and compare it to actual CRC byte at the end
-	bool CheckCRC(char *buffer, int size)
+	bool CheckCRC(char* buffer, int size)
 	{
 		if (size <= 0)
 			return false;
@@ -234,7 +234,7 @@ public:
 		CmdPack.CRC = 0;
 		for (int i = 0; i < headerSize; i++)
 		{
-			unsigned char byte = ((char *)&CmdPack.header)[i];
+			unsigned char byte = ((char*)&CmdPack.header)[i];
 			for (int b = 0; b < 8; b++)
 			{
 				if (byte & (1 << b))
@@ -255,7 +255,7 @@ public:
 	}
 
 	// Generate the packet to assemble and serialize header body and CRC
-	char *GenPacket()
+	char* GenPacket()
 	{
 		int packetSize = CmdPack.header.length;
 		if (RawBuffer)
@@ -268,7 +268,7 @@ public:
 		std::memset(RawBuffer, 0, packetSize);
 
 		// create pointer to track position in buffer
-		char *ptr = RawBuffer;
+		char* ptr = RawBuffer;
 
 		// Copy header
 		memcpy(ptr, &CmdPack.header, headerSize);

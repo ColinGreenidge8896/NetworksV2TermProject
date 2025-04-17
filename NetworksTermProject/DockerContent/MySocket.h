@@ -37,7 +37,7 @@ const int DEFAULT_SIZE = 1024;
 class MySocket
 {
 private:
-    char *Buffer;
+    char* Buffer;
     int WelcomeSocket;
     int ConnectionSocket;
     struct sockaddr_in SvrAddr;
@@ -84,7 +84,7 @@ public:
 
         if (mySocket == SERVER)
         {
-            if (bind(WelcomeSocket, (struct sockaddr *)&SvrAddr, sizeof(SvrAddr)) < 0)
+            if (bind(WelcomeSocket, (struct sockaddr*)&SvrAddr, sizeof(SvrAddr)) < 0)
             {
                 std::cerr << "Socket binding failed!" << std::endl;
                 exit(EXIT_FAILURE);
@@ -123,7 +123,7 @@ public:
         if (mySocket == CLIENT)
         {
             ConnectionSocket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
-            if (connect(ConnectionSocket, (struct sockaddr *)&SvrAddr, sizeof(SvrAddr)) < 0)
+            if (connect(ConnectionSocket, (struct sockaddr*)&SvrAddr, sizeof(SvrAddr)) < 0)
             {
                 std::cerr << "TCP connection failed!" << std::endl;
                 return;
@@ -132,7 +132,7 @@ public:
         else
         {
             socklen_t addr_size = sizeof(SvrAddr);
-            ConnectionSocket = accept(WelcomeSocket, (struct sockaddr *)&SvrAddr, &addr_size);
+            ConnectionSocket = accept(WelcomeSocket, (struct sockaddr*)&SvrAddr, &addr_size);
             if (ConnectionSocket < 0)
             {
                 std::cerr << "Accepting connection failed!" << std::endl;
@@ -152,7 +152,7 @@ public:
     }
 
     // Send data to client and server
-    void SendData(const char *data, int size)
+    void SendData(const char* data, int size)
     {
         if (connectionType == TCP)
         {
@@ -160,12 +160,12 @@ public:
         }
         else
         {
-            sendto(WelcomeSocket, data, size, 0, (struct sockaddr *)&SvrAddr, sizeof(SvrAddr));
+            sendto(WelcomeSocket, data, size, 0, (struct sockaddr*)&SvrAddr, sizeof(SvrAddr));
         }
     }
 
     // Receive data from client and server
-    int GetData(char *dest)
+    int GetData(char* dest)
     {
         int bytesReceived;
         if (connectionType == TCP)
@@ -175,7 +175,7 @@ public:
         else
         {
             socklen_t addr_len = sizeof(SvrAddr);
-            bytesReceived = recvfrom(WelcomeSocket, Buffer, MaxSize, 0, (struct sockaddr *)&SvrAddr, &addr_len);
+            bytesReceived = recvfrom(WelcomeSocket, Buffer, MaxSize, 0, (struct sockaddr*)&SvrAddr, &addr_len);
         }
         memcpy(dest, Buffer, bytesReceived);
         return bytesReceived;
