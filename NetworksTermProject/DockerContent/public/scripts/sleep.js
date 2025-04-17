@@ -1,6 +1,9 @@
-//JavaScript script to put the robot to sleep
 function putRobotToSleep() {
-    fetch("/sleep", { method: "PUT" })
+    fetch("/telecommand", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ command: "sleep" })
+    })
         .then(res => res.text())
         .then(msg => {
             document.getElementById("sleepResult").textContent = msg;

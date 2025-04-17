@@ -1,28 +1,25 @@
-// public/scripts/drive.js
 function sendDrive() {
-    const direction = parseInt(document.getElementById("direction").value);
-    const duration = parseInt(document.getElementById("duration").value);
-    const speed = parseInt(document.getElementById("speed").value);
+    const direction = document.getElementById("direction").value;
+    const duration = document.getElementById("duration").value;
+    const speed = document.getElementById("speed").value;
 
-    const url = `/telecommand/${direction}/${duration}/${speed}`;
-
-    fetch(url, {
+    fetch("/telecommand", {
         method: "PUT",
-        headers: {
-            'Content-Type': 'application/json'
-        }
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            command: "drive",
+            direction: parseInt(direction),
+            duration: parseInt(duration),
+            speed: parseInt(speed)
+        })
     })
-    .then(response => response.text().then(text => ({ status: response.status, text })))
-    .then(({ status, text }) => {
-        if (status === 200) {
-            document.getElementById("driveResult").textContent = "Success: " + text;
-        } else {
-            document.getElementById("driveResult").textContent = "Error: " + text;
-        }
-    })
-    .catch(err => {
-        document.getElementById("driveResult").textContent = "Error: " + err;
-    });
+        .then(res => res.text())
+        .then(msg => {
+            document.getElementById("driveResult").textContent = msg;
+        })
+        .catch(err => {
+            document.getElementById("driveResult").textContent = "Error: " + err;
+        });
 
     return false;
 }

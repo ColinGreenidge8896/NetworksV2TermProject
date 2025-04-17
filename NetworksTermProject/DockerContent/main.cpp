@@ -112,8 +112,8 @@ int main() {
         res.end();
     });
 
-    // PUT: /telecommand/DIR/DURATION/SPEED
-    CROW_ROUTE(app, "/telecommand/<int>/<int>/<int>").methods(crow::HTTPMethod::PUT)([](const crow::request&, crow::response& res, int direction, int duration, int speed) {
+    // PUT: /telecommand
+    CROW_ROUTE(app, "/telecommand").methods(crow::HTTPMethod::PUT)([](const crow::request& req, crow::response& res) {
         res.set_header("Content-Type", "text/plain");
 
         if (RobotClient == nullptr) {
@@ -123,60 +123,49 @@ int main() {
             return;
         }
 
+        // Parse request body for optional drive parameters
+        auto body = crow::json::load(req.body);
         PktDef pkt;
-        pkt.SetPktCount(2);
-        pkt.SetCmd(DRIVE);
 
-        DriveBody drive = {
-            static_cast<char>(direction),
-            static_cast<char>(duration),
-            static_cast<char>(speed)
-        };
+        if (!body || !body.has("command")) {
+            res.code = 400;
+            res.write("Missing command type.\n");
+            res.end();
+            return;
+        }
 
-        pkt.SetBodyData(reinterpret_cast<char*>(&drive), sizeof(DriveBody));
-        pkt.CalcCRC();
-
-        char* raw = pkt.GenPacket();
-        int totalSize = pkt.GetLength();  
-        RobotClient->SendData(raw, totalSize);
-
-        char buffer[1024] = {};
-        int bytes = RobotClient->GetData(buffer);
-
-        if (bytes > 0) {
-            PktDef response(buffer);
-            if (response.GetAck() && response.GetCmd() == DRIVE) {
-                res.code = 200;
-                res.write("Drive command acknowledged.\n");
-            }
-            else {
+        std::string cmd = body["command"].s();
+        if (cmd == "drive") {
+            if (!(body.has("direction") && body.has("duration") && body.has("speed"))) {
                 res.code = 400;
-                res.write("Simulator responded, but not with DRIVE ACK.\n");
+                res.write("Missing drive parameters.\n");
+                res.end();
+                return;
             }
+
+            pkt.SetPktCount(2);
+            pkt.SetCmd(DRIVE);
+
+            DriveBody drive = {
+                static_cast<char>(body["direction"].i()),
+                static_cast<char>(body["duration"].i()),
+                static_cast<char>(body["speed"].i())
+            };
+
+            pkt.SetBodyData(reinterpret_cast<char*>(&drive), sizeof(DriveBody));
+        }
+        else if (cmd == "sleep") {
+            pkt.SetPktCount(3);
+            pkt.SetCmd(SLEEP);
+
         }
         else {
-            res.code = 500;
-            res.write("No response from simulator.\n");
-        }
-
-        res.end();
-    });
-
-    CROW_ROUTE(app, "/sleep").methods(crow::HTTPMethod::PUT)([](const crow::request&, crow::response& res) {
-        res.set_header("Content-Type", "text/plain");
-
-        if (RobotClient == nullptr) {
             res.code = 400;
-            res.write("Robot not connected. Use /connect first.");
+            res.write("Unknown command.\n");
             res.end();
             return;
         }
 
-        PktDef pkt;
-        pkt.SetPktCount(3);     // Same format as other commands
-        pkt.SetCmd(SLEEP);      // Set sleep flag
-
-        //pkt.SetBodyData(nullptr, 0); // No body for sleep
         pkt.CalcCRC();
 
         char* raw = pkt.GenPacket();
@@ -188,13 +177,16 @@ int main() {
 
         if (bytes > 0) {
             PktDef response(buffer);
-            if (response.GetAck() && response.GetCmd() == SLEEP) {
+            CmdType rCmd = response.GetCmd();
+
+            if (response.GetAck() && rCmd == pkt.GetCmd()) {
                 res.code = 200;
-                res.write("Robot put to sleep. 💤 Goodnight.\n");
+                if (rCmd == DRIVE) res.write("Drive command acknowledged.\n");
+                else if (rCmd == SLEEP) res.write("Robot put to sleep. Goodnight.\n");
             }
             else {
                 res.code = 400;
-                res.write("Simulator responded, but not with SLEEP ACK.\n");
+                res.write("Simulator responded, but not with expected ACK.\n");
             }
         }
         else {
