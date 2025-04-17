@@ -1,9 +1,11 @@
 // public/scripts/connect.js
+// This script handles the connection to the robot using the provided IP address and port.
 function connectToRobot() {
     const ip = document.getElementById("robotIP").value;
     const port = document.getElementById("robotPort").value;
     const protocol = document.getElementById("protocol").value;
 
+    // Validate IP address and port
     fetch(`/connect/${ip}/${port}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },

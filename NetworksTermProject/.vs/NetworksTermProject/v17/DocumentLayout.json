@@ -1,7 +1,20 @@
 {
   "Version": 1,
   "WorkspaceRootPath": "C:\\Users\\alexr\\Desktop\\NetworksV2TermProject\\NetworksTermProject\\",
-  "Documents": [],
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{7B733737-4890-41B8-B5C2-2DE886645A3C}|NetworksTermProject\\NetworksTermProject.vcxproj|C:\\Users\\alexr\\Desktop\\NetworksV2TermProject\\NetworksTermProject\\DockerContent\\packet.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{7B733737-4890-41B8-B5C2-2DE886645A3C}|NetworksTermProject\\NetworksTermProject.vcxproj|solutionrelative:DockerContent\\packet.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{7B733737-4890-41B8-B5C2-2DE886645A3C}|NetworksTermProject\\NetworksTermProject.vcxproj|C:\\Users\\alexr\\Desktop\\NetworksV2TermProject\\NetworksTermProject\\DockerContent\\MySocket.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{7B733737-4890-41B8-B5C2-2DE886645A3C}|NetworksTermProject\\NetworksTermProject.vcxproj|solutionrelative:DockerContent\\MySocket.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{7B733737-4890-41B8-B5C2-2DE886645A3C}|NetworksTermProject\\NetworksTermProject.vcxproj|C:\\Users\\alexr\\Desktop\\NetworksV2TermProject\\NetworksTermProject\\NetworksTermProject\\main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{7B733737-4890-41B8-B5C2-2DE886645A3C}|NetworksTermProject\\NetworksTermProject.vcxproj|solutionrelative:NetworksTermProject\\main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    }
+  ],
   "DocumentGroupContainers": [
     {
       "Orientation": 0,
@@ -9,7 +22,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": -1,
+          "SelectedChildIndex": 6,
           "Children": [
             {
               "$type": "Bookmark",
@@ -34,6 +47,45 @@
             {
               "$type": "Bookmark",
               "Name": "ST:0:0:{1c64b9c2-e352-428e-a56d-0ace190b99a6}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "packet.h",
+              "DocumentMoniker": "C:\\Users\\alexr\\Desktop\\NetworksV2TermProject\\NetworksTermProject\\DockerContent\\packet.h",
+              "RelativeDocumentMoniker": "DockerContent\\packet.h",
+              "ToolTip": "C:\\Users\\alexr\\Desktop\\NetworksV2TermProject\\NetworksTermProject\\DockerContent\\packet.h",
+              "RelativeToolTip": "DockerContent\\packet.h",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAI0AAAADAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2025-04-17T03:05:03.712Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "MySocket.h",
+              "DocumentMoniker": "C:\\Users\\alexr\\Desktop\\NetworksV2TermProject\\NetworksTermProject\\DockerContent\\MySocket.h",
+              "RelativeDocumentMoniker": "DockerContent\\MySocket.h",
+              "ToolTip": "C:\\Users\\alexr\\Desktop\\NetworksV2TermProject\\NetworksTermProject\\DockerContent\\MySocket.h",
+              "RelativeToolTip": "DockerContent\\MySocket.h",
+              "ViewState": "AgIAAG8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2025-04-17T03:04:54.427Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "main.cpp",
+              "DocumentMoniker": "C:\\Users\\alexr\\Desktop\\NetworksV2TermProject\\NetworksTermProject\\NetworksTermProject\\main.cpp",
+              "RelativeDocumentMoniker": "NetworksTermProject\\main.cpp",
+              "ToolTip": "C:\\Users\\alexr\\Desktop\\NetworksV2TermProject\\NetworksTermProject\\NetworksTermProject\\main.cpp",
+              "RelativeToolTip": "NetworksTermProject\\main.cpp",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2025-04-17T03:04:35.251Z",
+              "EditorCaption": ""
             }
           ]
         },

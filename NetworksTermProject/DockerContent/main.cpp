@@ -13,8 +13,8 @@ string robotIP = "127.0.0.1";
 int robotPort = 5000;
 MySocket *RobotClient = nullptr;
 
-//counter for packetcount
-int counter;
+// Counter for packet numbers
+int counter = 0;
 
 // Helper to serve files from ./public/
 void sendFile(crow::response &res, const string &path)
@@ -36,14 +36,14 @@ void sendFile(crow::response &res, const string &path)
 
 int main()
 {
-    // Root GUI
+	// Route for index.html and homepage
     CROW_ROUTE(app, "/").methods(crow::HTTPMethod::GET)([](const crow::request &, crow::response &res)
                                                         { sendFile(res, "../public/index.html"); });
 
-    // Serve static files
+	// Route to get style.css
     CROW_ROUTE(app, "/get_style/<string>").methods(crow::HTTPMethod::GET)([](const crow::request &, crow::response &res, string filename)
                                                                           { sendFile(res, "../public/styles/" + filename); });
-
+	// Route to get script.js
     CROW_ROUTE(app, "/get_script/<string>").methods(crow::HTTPMethod::GET)([](const crow::request &, crow::response &res, string filename)
                                                                            { sendFile(res, "../public/scripts/" + filename); });
 
