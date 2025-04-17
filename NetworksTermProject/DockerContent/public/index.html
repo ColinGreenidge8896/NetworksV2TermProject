@@ -15,21 +15,27 @@
     </header>
 
     <main style="text-align: center; margin-top: 40px;">
-    
+
         <!-- Connect Section -->
         <section>
             <h2>Connect to Robot</h2>
-            <form id="connectForm" onsubmit="return connectToRobot();">
-                <label>Robot IP:</label>
+            <form id="connectForm" onsubmit="return connectToRobot();" style="display: inline-block; text-align: left;">
+                <label for="robotIP">Robot IP:</label><br>
                 <input type="text" id="robotIP" placeholder="127.0.0.1" required><br><br>
-                <label>Robot Port:</label>
+
+                <label for="robotPort">Robot Port:</label><br>
                 <input type="number" id="robotPort" placeholder="5000" required><br><br>
+
+                <label for="protocol">Protocol:</label><br>
+                <select id="protocol">
+                    <option value="UDP" selected>UDP</option>
+                    <option value="TCP">TCP</option>
+                </select><br><br>
+
                 <button type="submit">Connect</button>
             </form>
             <pre id="connectResult" style="margin-top: 20px;"></pre>
         </section>
-
-        <hr style="margin: 40px 0;">
 
         <!-- Drive Section -->
         <section>

@@ -45,19 +45,35 @@ int main()
                                                                            { sendFile(res, "../public/scripts/" + filename); });
 
     // POST: /connect/IP/PORT
-    CROW_ROUTE(app, "/connect/<string>/<int>").methods(crow::HTTPMethod::POST)([](const crow::request &, crow::response &res, string ip, int port)
-                                                                               {
-        robotIP = ip;
-        robotPort = port;
+    CROW_ROUTE(app, "/connect/<string>/<int>").methods(crow::HTTPMethod::POST)(
+        [](const crow::request& req, crow::response& res, string ip, int port) {
+            robotIP = ip;
+            robotPort = port;
 
-        if (RobotClient != nullptr) {
-            delete RobotClient;
-        }
+            // Default to UDP unless specified
+            ConnectionType connType = UDP;
 
-        RobotClient = new MySocket(CLIENT, robotIP, robotPort, UDP, 1024);
-        res.code = 200;
-        res.write("Connection info set: IP = " + ip + ", Port = " + to_string(port));
-        res.end(); });
+            auto body = crow::json::load(req.body);
+            if (body && body.has("protocol")) {
+                string proto = body["protocol"].s();
+                if (proto == "TCP") {
+                    connType = TCP;
+                }
+            }
+
+            if (RobotClient != nullptr) {
+                delete RobotClient;
+            }
+
+            RobotClient = new MySocket(CLIENT, robotIP, robotPort, connType, 1024);
+
+            std::string protocolName = (connType == UDP) ? "UDP" : "TCP";
+            std::string result = "Connected using " + protocolName + " to " + ip + ":" + std::to_string(port);
+
+            std::cout << "[CONNECT] " << result << std::endl;
+            res.write(result);
+            res.end();
+        });
 
     // GET: /telemetry_request/
     CROW_ROUTE(app, "/telemetry_request/").methods(crow::HTTPMethod::GET)([](const crow::request &, crow::response &res)
@@ -171,13 +187,6 @@ int main()
                     res.write("No response from simulator.\n");
                 }
             }
-
-
-
-        //-----------------------------------------------------------------------------------//
-
-
-
 
             else if (command == "sleep") {
                 PktDef pkt;

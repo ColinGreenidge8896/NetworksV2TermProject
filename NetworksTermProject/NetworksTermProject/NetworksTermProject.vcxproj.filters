@@ -15,15 +15,15 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="packet.h">
-      <Filter>Header Files</Filter>
-    </ClCompile>
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="MySocket.h">
+    <ClInclude Include="..\DockerContent\packet.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\DockerContent\MySocket.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
