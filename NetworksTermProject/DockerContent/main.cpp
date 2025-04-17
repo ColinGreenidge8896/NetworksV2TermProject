@@ -13,6 +13,8 @@ string robotIP = "127.0.0.1";
 int robotPort = 5000;
 MySocket *RobotClient = nullptr;
 
+int counter;
+
 // Helper to serve files from ./public/
 void sendFile(crow::response &res, const string &path)
 {
@@ -88,7 +90,7 @@ int main()
         }
 
         PktDef pkt;
-        pkt.SetPktCount(1);
+        pkt.SetPktCount(++counter);
         pkt.SetCmd(STATUS);
 
         pkt.CalcCRC();
@@ -100,6 +102,7 @@ int main()
         char buffer[1024] = {};
         //this is the get the ack, need another to get the actual telem response
         int bytes = RobotClient->GetData(buffer);
+        counter++;
         //check if ack in buffer
         PktDef ackResponse(buffer);
 
@@ -112,6 +115,7 @@ int main()
         //get telemetry body if ack success
         char buffer2[1024] = {};
         int bytes2 = RobotClient->GetData(buffer2);
+        counter++;
 
         PktDef response(buffer2);
         TelemetryBody t = response.GetTelemetry();
@@ -151,12 +155,14 @@ int main()
             std::string command = json["command"].s();
 
             if (command == "drive") {
+
+                //get integer values of drive commands from json
                 int direction = json["direction"].i();
                 int duration = json["duration"].i();
                 int speed = json["speed"].i();
 
                 PktDef pkt;
-                pkt.SetPktCount(2);
+                pkt.SetPktCount(++counter);
                 pkt.SetCmd(DRIVE);
                 DriveBody drive = {
                     static_cast<char>(direction),
@@ -173,6 +179,7 @@ int main()
                 char buffer[1024] = {};
                 int bytes = RobotClient->GetData(buffer);
                 if (bytes > 0) {
+                    counter++;
                     PktDef response(buffer);
                     if (response.GetAck() && response.GetCmd() == DRIVE) {
                         res.write("Drive command acknowledged.\n");
@@ -190,7 +197,7 @@ int main()
 
             else if (command == "sleep") {
                 PktDef pkt;
-                pkt.SetPktCount(3);
+                pkt.SetPktCount(++counter);
                 pkt.SetCmd(SLEEP);
 
                 pkt.CalcCRC();
@@ -203,6 +210,7 @@ int main()
                 char buffer[1024] = {};
                 int bytes = RobotClient->GetData(buffer);
                 if (bytes > 0) {
+                    counter++;
                     PktDef response(buffer);
                     if (response.GetAck() && response.GetCmd() == SLEEP) {
                         res.write("Robot put to sleep. Goodnight.\n");
