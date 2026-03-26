@@ -1,6 +1,6 @@
 # Robot Control Network Interface
 
-A cross-platform C++ networking application that implements a custom socket abstraction layer and binary packet protocol to communicate with a robot simulator over both TCP and UDP. Includes a web-based GUI served by a built-in HTTP server, with Docker support for Linux deployment.
+A cross-platform C++ networking application that implements a custom socket abstraction layer and binary packet protocol to communicate with a robot simulator over both TCP and UDP, as well as a real robot in person. Includes a web-based GUI served by a built-in HTTP server, with Docker support for Linux deployment.
 
 > **Course:** Networks II — Conestoga College  
 > **Team:** Group Robot_1 (Colin Greenidge & Alex)  
